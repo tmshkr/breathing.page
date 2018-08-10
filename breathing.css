@@ -15,8 +15,8 @@ body {
     margin-top: 33vh;
     background: skyblue;
     -moz-border-radius: 50%;
-	-webkit-border-radius: 50%;
-	border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
     clip-path: circle();
     will-change: transform;
     -webkit-transition: all 4.0s ease-in-out;
