@@ -9,16 +9,16 @@ body {
 }
 
 #circle {
+    display: inline-block;
     width: 15vh;
 	height: 15vh;
+	margin-top: 33vh;
 	background: skyblue;
-	-moz-border-radius: 15vh;
-	-webkit-border-radius: 15vh;
-	border-radius: 15vh;
-	margin: 33vh auto 0;
-	-webkit-transition: all 4.0s;
-    -moz-transition: all 4.0s;
-	transition: all 4.0s;
+	clip-path: circle();
+	will-change: transform;
+	-webkit-transition: all 4.0s ease-in-out;
+    -moz-transition: all 4.0s ease-in-out;
+	transition: all 4.0s ease-in-out;
 }
 
 #text {
@@ -33,13 +33,6 @@ body {
     #circle {
         width: 15vw;
     	height: 15vw;
-    	-moz-border-radius: 15vw;
-    	-webkit-border-radius: 15vw;
-    	border-radius: 15vw;
-    }
-    
-    #text {
-        margin-top: 33vh;
     }
 }
 
@@ -48,12 +41,5 @@ body {
     #circle {
         width: 15vh;
     	height: 15vh;
-    	-moz-border-radius: 15vh;
-    	-webkit-border-radius: 15vh;
-    	border-radius: 15vh;
-    }
-    
-    #text {
-        margin-top: 33vh;
     }
 }
