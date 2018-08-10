@@ -1,0 +1,59 @@
+html {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+body {
+    background-color: #333;
+}
+
+#circle {
+    width: 15vh;
+	height: 15vh;
+	background: skyblue;
+	-moz-border-radius: 15vh;
+	-webkit-border-radius: 15vh;
+	border-radius: 15vh;
+	margin: 33vh auto 0;
+	-webkit-transition: all 4.0s;
+    -moz-transition: all 4.0s;
+	transition: all 4.0s;
+}
+
+#text {
+    color: white;
+    font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;;
+    margin-top: 33vh;
+}
+
+
+@media screen and (max-width: 1000px) {
+
+    #circle {
+        width: 15vw;
+    	height: 15vw;
+    	-moz-border-radius: 15vw;
+    	-webkit-border-radius: 15vw;
+    	border-radius: 15vw;
+    }
+    
+    #text {
+        margin-top: 33vh;
+    }
+}
+
+@media screen and (orientation: landscape) {
+
+    #circle {
+        width: 15vh;
+    	height: 15vh;
+    	-moz-border-radius: 15vh;
+    	-webkit-border-radius: 15vh;
+    	border-radius: 15vh;
+    }
+    
+    #text {
+        margin-top: 33vh;
+    }
+}
