@@ -10,15 +10,12 @@ body {
 
 #circle {
     display: inline-block;
-    width: 15vh;
-    height: 15vh;
-    margin-top: 33vh;
-    background: skyblue;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    border-radius: 50%;
-    clip-path: circle();
+    width: 50vh;
+    height: 50vh;
+    margin-top: 10vh;
+    fill: skyblue;
     will-change: transform;
+    transform: scale(0.25);
     -webkit-transition: all 4.0s ease-in-out;
     -moz-transition: all 4.0s ease-in-out;
     transition: all 4.0s ease-in-out;
@@ -27,22 +24,30 @@ body {
 #text {
     color: white;
     font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
-    margin-top: 33vh;
+    margin-top: 25vh;
 }
 
 
 @media screen and (max-width: 1000px) {
 
     #circle {
-        width: 15vw;
-        height: 15vw;
+        width: 50vw;
+        height: 50vw;
+    }
+}
+
+@media screen and (orientation: portrait) {
+
+    #circle {
+        width: 50vw;
+        height: 50vw;
     }
 }
 
 @media screen and (orientation: landscape) {
 
     #circle {
-        width: 15vh;
-        height: 15vh;
+        width: 50vh;
+        height: 50vh;
     }
 }

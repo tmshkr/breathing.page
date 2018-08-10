@@ -7,7 +7,7 @@ var inhale = true
 function breathe() {
 
       if (inhale){
-        circle.style.transform = "scale(4)"
+        circle.style.transform = "scale(1)"
         text.textContent = "inhale"
         window.setTimeout(function() {
           text.textContent = "hold"
@@ -15,7 +15,7 @@ function breathe() {
         inhale = false
       }
       else if (!inhale){
-        circle.style.transform = "scale(1)"
+        circle.style.transform = "scale(0.25)"
         text.textContent = "exhale"
         window.setTimeout(function() {
           text.textContent = "hold"
