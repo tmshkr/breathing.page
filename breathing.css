@@ -11,19 +11,19 @@ body {
 #circle {
     display: inline-block;
     width: 15vh;
-	height: 15vh;
-	margin-top: 33vh;
-	background: skyblue;
-	clip-path: circle();
-	will-change: transform;
-	-webkit-transition: all 4.0s ease-in-out;
+    height: 15vh;
+    margin-top: 33vh;
+    background: skyblue;
+    clip-path: circle();
+    will-change: transform;
+    -webkit-transition: all 4.0s ease-in-out;
     -moz-transition: all 4.0s ease-in-out;
-	transition: all 4.0s ease-in-out;
+    transition: all 4.0s ease-in-out;
 }
 
 #text {
     color: white;
-    font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;;
+    font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 33vh;
 }
 
@@ -32,7 +32,7 @@ body {
 
     #circle {
         width: 15vw;
-    	height: 15vw;
+        height: 15vw;
     }
 }
 
@@ -40,6 +40,6 @@ body {
 
     #circle {
         width: 15vh;
-    	height: 15vh;
+        height: 15vh;
     }
 }
