@@ -10,7 +10,7 @@ function breathe() {
         circle.style.transform = "scale(1)"
         text.textContent = "inhale"
         window.setTimeout(function() {
-          text.textContent = "hold"
+          text.textContent = "stay"
         }, 4000)
         inhale = false
       }
@@ -18,7 +18,7 @@ function breathe() {
         circle.style.transform = "scale(0.25)"
         text.textContent = "exhale"
         window.setTimeout(function() {
-          text.textContent = "hold"
+          text.textContent = "stay"
         }, 4000)
         inhale = true
       }

@@ -9,7 +9,7 @@ body {
     margin: 0;
 }
 
-#circle circle {
+circle {
     fill: skyblue;
 }
 
