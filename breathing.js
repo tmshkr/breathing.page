@@ -18,7 +18,7 @@ function breathe() {
         circle.style.transform = "scale(0.25)"
         text.textContent = "exhale"
         window.setTimeout(function() {
-          text.textContent = "stay"
+          text.textContent = "pause"
         }, 4000)
         inhale = true
       }
