@@ -4,6 +4,7 @@ html {
     text-align: center;
     background-color: #333;
     font-size: 21px;
+    cursor: default;
 }
 
 body {
@@ -39,7 +40,7 @@ p {
     margin: 1em 0;
     color: white;
     width: 100%;
-    font-size: .7em;
+    font-size: 12px;
 }
 
 p a {
