@@ -3,13 +3,14 @@ html {
     width: 100%;
     text-align: center;
     background-color: #333;
+    font-size: 21px;
 }
 
 body {
     margin: 0;
 }
 
-circle {
+#circle circle {
     fill: skyblue;
 }
 
@@ -31,6 +32,25 @@ circle {
     font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 15vh;
 }
+
+p {
+    position: absolute;
+    bottom: 0;
+    margin: 1em 0;
+    color: white;
+    width: 100%;
+    font-size: .7em;
+}
+
+p a {
+    color: white;
+    text-decoration: none;
+}
+
+p span {
+    cursor: default;
+}
+
 
 
 @media screen and (max-width: 600px) {

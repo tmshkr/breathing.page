@@ -1,5 +1,7 @@
 var circle = document.getElementById("circle")
 var text = document.getElementById("text")
+var license = document.querySelector("p")
+var hideLicenseButton = document.querySelector("p span")
 var textDisplay = true
 var inhale = true
 
@@ -24,16 +26,24 @@ function breathe() {
       }
 }
 
-function toggleText() {
+function toggleText(event) {
   if (textDisplay){
     text.style.color = "transparent"
     textDisplay = false
+    event.cancelBubble = true
+    document.onclick = toggleText
   }
   else {
     text.style.color = "white"
     textDisplay = true
+    document.onclick = null
   }
 }
 
+function hideLicense(event) {
+  license.style.display = "none"
+}
+
 text.onclick = toggleText
+hideLicenseButton.onclick = hideLicense
 setInterval(breathe, 8000)
