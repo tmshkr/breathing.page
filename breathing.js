@@ -10,11 +10,11 @@ function breathe() {
         circle.style.transform = "scale(1)"
         text.textContent = "inhale"
         window.setTimeout(function() {
-          text.textContent = "stay"
+          text.textContent = "hold"
         }, 4000)
         inhale = false
       }
-      else if (!inhale){
+      else {
         circle.style.transform = "scale(0.25)"
         text.textContent = "exhale"
         window.setTimeout(function() {
@@ -29,7 +29,7 @@ function toggleText() {
     text.style.color = "transparent"
     textDisplay = false
   }
-  else if (!textDisplay){
+  else {
     text.style.color = "white"
     textDisplay = true
   }
