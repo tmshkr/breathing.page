@@ -1,5 +1,6 @@
 var circle = document.getElementById("circle")
 var text = document.getElementById("text")
+var main = document.getElementById("main")
 var sidebarToggle = document.getElementById("sidebar-toggle")
 var sidebarOpen = false
 var textDisplay = true
@@ -42,11 +43,11 @@ function toggleText(event) {
 
 function toggleSidebar(event) {
   if (sidebarOpen) {
-    document.body.style.transform = "translateX(0)"
+    main.style.transform = "translateX(0)"
     sidebarOpen = false
     sidebarToggle.className = ""
   } else {
-    document.body.style.transform = "translateX(-15em)"
+    main.style.transform = "translateX(-15em)"
     sidebarOpen = true
     sidebarToggle.className = "open"
   }

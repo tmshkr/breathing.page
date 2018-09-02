@@ -9,10 +9,15 @@ html {
 
 body {
     margin: 0;
-    transition: transform 0.5s;
     height: 100%;
     width: 100%;
     overflow: hidden;
+}
+
+main {
+    transition: transform 0.5s;
+    height: 100%;
+    width: 100%;
 }
 
 #sidebar {
@@ -22,23 +27,27 @@ body {
     height: 100%;
     width: 15em;
     background-color: #555;
+    z-index: -1;
 }
 
 #sidebar ul {
     list-style: none;
     text-align: right;
     padding: 0;
-    margin-right: 1em;
+    margin-top: 3em;
+    height: 100%;
+    background-color: #444;
     font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 
 #sidebar li {
-    margin: 1em 0;
+    padding: 1em 1em 0 0;
 }
 
 #sidebar li a {
     text-decoration: none;
     color: white;
+    cursor: pointer;
 }
 
 #sidebar .checked:before {
@@ -46,7 +55,7 @@ body {
     display: inline-block;
     width: 0.3em;
     height: 0.6em;
-    border: solid #a1a1a1;
+    border: solid #aaa;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
     margin: 0 1em 0.1em;
@@ -60,6 +69,7 @@ body {
     cursor: pointer;
     opacity: .33;
     transition: opacity .5s;
+    z-index: 1;
 }
 
 #sidebar-toggle:hover,
