@@ -1,7 +1,7 @@
 var circle = document.getElementById("circle")
 var text = document.getElementById("text")
-var license = document.querySelector("p")
-var hideLicenseButton = document.querySelector("p span")
+var sidebarToggle = document.getElementById("sidebar-toggle")
+var sidebarOpen = false
 var textDisplay = true
 var inhale = true
 
@@ -40,10 +40,19 @@ function toggleText(event) {
   }
 }
 
-function hideLicense(event) {
-  license.style.display = "none"
+function toggleSidebar(event) {
+  if (sidebarOpen) {
+    document.body.style.transform = "translateX(0)"
+    sidebarOpen = false
+    sidebarToggle.className = ""
+  } else {
+    document.body.style.transform = "translateX(-15em)"
+    sidebarOpen = true
+    sidebarToggle.className = "open"
+  }
 }
 
 text.onclick = toggleText
-hideLicenseButton.onclick = hideLicense
+sidebarToggle.onclick = toggleSidebar
+document.ontouchmove = function (e) { e.preventDefault() } //prevent mobile scroll
 setInterval(breathe, 8000)

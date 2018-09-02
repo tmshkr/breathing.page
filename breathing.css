@@ -9,6 +9,103 @@ html {
 
 body {
     margin: 0;
+    transition: transform 0.5s;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+#sidebar {
+    position: absolute;
+    right: -15em;
+    color: white;
+    height: 100%;
+    width: 15em;
+    background-color: #555;
+}
+
+#sidebar ul {
+    list-style: none;
+    text-align: right;
+    padding: 0;
+    margin-right: 1em;
+    font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+#sidebar li {
+    margin: 1em 0;
+}
+
+#sidebar li a {
+    text-decoration: none;
+    color: white;
+}
+
+#sidebar .checked:before {
+    content: '';
+    display: inline-block;
+    width: 0.3em;
+    height: 0.6em;
+    border: solid #a1a1a1;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+    margin: 0 1em 0.1em;
+}
+
+#sidebar-toggle {
+    color: white;
+    position: absolute;
+    right: 0;
+    margin: 0.5em;
+    cursor: pointer;
+    opacity: .33;
+    transition: opacity .5s;
+}
+
+#sidebar-toggle:hover,
+#sidebar-toggle.open {
+    opacity: 1;
+}
+
+
+#sidebar-toggle span {
+    display: block;
+    width: 1em;
+    height: 3px;
+    background-color: white;
+    margin: 1em;
+}
+
+#sidebar-toggle span::before {
+    display: block;
+    position: absolute;
+    background-color: white;
+    content: '';
+    width: 1em;
+    height: 3px;
+    transform: translateY(-.33em);
+}
+  
+#sidebar-toggle span::after {
+    display: block;
+    position: absolute;
+    background-color: white;
+    content: '';
+    width: 1em;
+    height: 3px;
+    transform: translateY(.33em);
+}
+
+#sidebar-toggle.open span {
+    background-color: transparent;
+}
+
+#sidebar-toggle.open span::before {
+    transform: rotate(45deg);
+}
+
+#sidebar-toggle.open span::after {
+    transform: rotate(-45deg);
 }
 
 #circle circle {
@@ -55,6 +152,10 @@ p span {
 
 
 @media screen and (max-width: 600px) {
+
+    #sidebar-toggle {
+        margin: 0.5em 0;
+    }
 
     #circle {
         width: 50vw;
