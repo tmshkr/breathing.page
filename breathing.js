@@ -1,33 +1,33 @@
-var circle = document.getElementById("circle")
-var text = document.getElementById("text")
-var sidebarToggle = document.getElementById("sidebar-toggle")
-var sidebarOpen = false
-var textDisplay = true
-var inhale = true
+const circle = document.getElementById("circle")
+const text = document.getElementById("text")
+const sidebarToggle = document.getElementById("sidebar-toggle")
+let sidebarOpen = false
+let textDisplay = true
+let inhale = true
 
 
 function breathe() {
 
-      if (inhale){
-        circle.style.transform = "scale(1)"
-        text.textContent = "inhale"
-        window.setTimeout(function() {
-          text.textContent = "hold"
-        }, 4000)
-        inhale = false
-      }
-      else {
-        circle.style.transform = "scale(0.25)"
-        text.textContent = "exhale"
-        window.setTimeout(function() {
-          text.textContent = "pause"
-        }, 4000)
-        inhale = true
-      }
+  if (inhale) {
+    circle.style.transform = "scale(1)"
+    text.textContent = "inhale"
+    window.setTimeout(() => {
+      text.textContent = "hold"
+    }, 4000)
+    inhale = false
+  }
+  else {
+    circle.style.transform = "scale(0.25)"
+    text.textContent = "exhale"
+    window.setTimeout(() => {
+      text.textContent = "pause"
+    }, 4000)
+    inhale = true
+  }
 }
 
 function toggleText(event) {
-  if (textDisplay){
+  if (textDisplay) {
     text.style.color = "transparent"
     textDisplay = false
     event.cancelBubble = true
@@ -45,7 +45,8 @@ function toggleSidebar(event) {
     document.body.style.transform = "translateX(0)"
     sidebarOpen = false
     sidebarToggle.className = ""
-  } else {
+  }
+  else {
     document.body.style.transform = "translateX(-15em)"
     sidebarOpen = true
     sidebarToggle.className = "open"
@@ -54,5 +55,5 @@ function toggleSidebar(event) {
 
 text.onclick = toggleText
 sidebarToggle.onclick = toggleSidebar
-document.ontouchmove = function (e) { e.preventDefault() } //prevent mobile scroll
+document.ontouchmove = (e) => { e.preventDefault() } //prevent mobile scroll
 setInterval(breathe, 8000)

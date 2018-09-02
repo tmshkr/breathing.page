@@ -9,6 +9,7 @@ html {
 
 body {
     margin: 0;
+    will-change: transform;
     transition: transform 0.5s;
     height: 100%;
     width: 100%;
@@ -39,6 +40,7 @@ body {
 #sidebar li a {
     text-decoration: none;
     color: white;
+    cursor: pointer;
 }
 
 #sidebar .checked:before {
@@ -46,7 +48,7 @@ body {
     display: inline-block;
     width: 0.3em;
     height: 0.6em;
-    border: solid #a1a1a1;
+    border: solid #aaa;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
     margin: 0 1em 0.1em;
@@ -85,7 +87,7 @@ body {
     height: 3px;
     transform: translateY(-.33em);
 }
-  
+
 #sidebar-toggle span::after {
     display: block;
     position: absolute;
@@ -168,6 +170,7 @@ p span {
     #circle {
         width: 50vw;
         height: 50vw;
+        margin-top: 20vh;
     }
 }
 
