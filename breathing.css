@@ -1,47 +1,71 @@
 html {
+    position: fixed;
     height: 100%;
     width: 100%;
     text-align: center;
     background-color: #333;
     font-size: 21px;
     cursor: default;
-}
-
-body {
-    margin: 0;
-    height: 100%;
-    width: 100%;
     overflow: hidden;
 }
 
+body {
+    position: fixed;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
 main {
+    will-change: transform;
     transition: transform 0.5s;
+    height: 100%;
+    width: 100%;
+}
+
+#main-view {
     height: 100%;
     width: 100%;
 }
 
 #sidebar {
     position: absolute;
+    background-color: #444;
     right: -15em;
     color: white;
     height: 100%;
     width: 15em;
-    background-color: #555;
     z-index: -1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#sidebar div {
+    position: fixed;
+    width: 100%;
+    height: 3em;
+    background-color: #555;
 }
 
 #sidebar ul {
     list-style: none;
     text-align: right;
-    padding: 0;
-    margin-top: 3em;
     height: 100%;
-    background-color: #444;
+    padding: 0;
+    margin: 0;
     font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 
 #sidebar li {
     padding: 1em 1em 0 0;
+}
+
+#sidebar li:first-child {
+    padding-top: 5em;
+}
+
+#sidebar li:last-child {
+    padding-bottom: 3em;
 }
 
 #sidebar li a {
@@ -118,6 +142,38 @@ main {
     transform: rotate(-45deg);
 }
 
+#sidebar table {
+    display: inline-block;
+}
+
+tr:last-child {
+    height: 3em;
+    vertical-align: bottom;
+}
+
+input {
+    font-size: 21px;
+    background-color: transparent;
+    border: 1px solid #aaa;
+    color: white;
+    outline: none;
+    padding: .33em;
+}
+
+input[type='text'] {
+    width: 5em;
+}
+
+input[type='number'] {
+    width: 2em;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 #circle circle {
     fill: skyblue;
 }
@@ -140,25 +196,6 @@ main {
     font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
     margin-top: 15vh;
 }
-
-p {
-    position: absolute;
-    bottom: 0;
-    margin: 1em 0;
-    color: white;
-    width: 100%;
-    font-size: 12px;
-}
-
-p a {
-    color: white;
-    text-decoration: none;
-}
-
-p span {
-    cursor: default;
-}
-
 
 
 @media screen and (max-width: 600px) {

@@ -13,7 +13,7 @@
         gtag('config', 'UA-123790385-1');
     </script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="breathing.css" type="text/css" />
     <title>breathing</title>
@@ -23,19 +23,45 @@
     <div id="sidebar-toggle"><span></span></div>
     <main id="main">
         <div id="sidebar">
+            <div></div>
             <ul>
+                <li>
+                    <table>
+                        <tr>
+                            <td><input type="text" value="inhale"/></td>
+                            <td><input type="number" min="2" max="10" value="4"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" value="hold"/></td>
+                            <td><input type="number" min="2" max="10" value="4"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" value="exhale"/></td>
+                            <td><input type="number" min="2" max="10" value="4"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" value="pause"/></td>
+                            <td><input type="number" min="2" max="10" value="4"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="button" value="reset" onclick="resetSettings()"/></td>
+                            <td><input type="button" value="save" onclick="saveSettings()"/></td>
+                        </tr>
+                    </table>
+                </li>
                 <li><a id="noSleepToggle">Prevent Display Sleep</a></li>
                 <li><a href="https://github.com/tmshkr/breathing/" target="_blank">GitHub Repository</a></li>
                 <li><a href="https://github.com/tmshkr/breathing/blob/master/LICENSE" target="_blank">License</a></li>
             </ul>
         </div>
-
-        <div id="circle">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="50"/>
-        </svg>
+        <div id="main-view">
+            <div id="circle">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="50"/>
+                </svg>
+            </div>
+            <h2 id="text">ready</h2>
         </div>
-        <h2 id="text">ready</h2>
     </main>
     <script type="text/javascript" src="NoSleep.js"></script>
     <script type="text/javascript" src="breathing.js"></script>
