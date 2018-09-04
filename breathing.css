@@ -72,6 +72,7 @@ main {
     text-decoration: none;
     color: white;
     cursor: pointer;
+    padding: 0.5em;
 }
 
 #sidebar .checked:before {
@@ -82,14 +83,14 @@ main {
     border: solid #aaa;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
-    margin: 0 1em 0.1em;
+    margin: 0 0.7em 0.1em;
 }
 
 #sidebar-toggle {
     color: white;
     position: absolute;
     right: 0;
-    margin: 0.5em;
+    margin: 0.5em 0;
     cursor: pointer;
     opacity: .33;
     transition: opacity .5s;
@@ -97,17 +98,25 @@ main {
 }
 
 #sidebar-toggle:hover,
+#sidebar-toggle:focus-within,
 #sidebar-toggle.open {
     opacity: 1;
 }
 
+
+#sidebar-toggle a {
+    height: 2em;
+    display: block;
+    right: 0.5em;
+    position: absolute;
+}
 
 #sidebar-toggle span {
     display: block;
     width: 1em;
     height: 3px;
     background-color: white;
-    margin: 1em;
+    margin: 1em 0.5em;
 }
 
 #sidebar-toggle span::before {
@@ -160,6 +169,10 @@ input {
     padding: .33em;
 }
 
+input:focus {
+    outline: 1px solid white;
+}
+
 input[type='text'] {
     width: 5em;
 }
@@ -199,10 +212,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 @media screen and (max-width: 600px) {
-
-    #sidebar-toggle {
-        margin: 0.5em 0;
-    }
 
     #circle {
         width: 50vw;
