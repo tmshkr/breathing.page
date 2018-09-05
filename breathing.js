@@ -12,7 +12,9 @@ var textDisplay = true
 function breathe() {
   
   text.textContent = words[0]
-  circle.style = `transition: all ${numbers[0]}s ease-in-out 0s; transform: scale(1);`
+  circle.style.transition = `all ${numbers[0]}s ease-in-out`
+  circle.style.webkitTransition = `all ${numbers[0]}s ease-in-out`
+  circle.style.transform = "scale(1)"
 
   window.setTimeout(function() {
     if (numbers[1] > 0)
@@ -20,7 +22,9 @@ function breathe() {
 
     window.setTimeout(function() {
       text.textContent = words[2]
-      circle.style = `transition: all ${numbers[2]}s ease-in-out 0s; transform: scale(0.25);`
+      circle.style.transition = `all ${numbers[2]}s ease-in-out`
+      circle.style.webkitTransition = `all ${numbers[2]}s ease-in-out`
+      circle.style.transform = "scale(0.25)"
 
       window.setTimeout(function() {
         if (numbers[3] > 0)
