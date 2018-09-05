@@ -112,7 +112,7 @@ function resetSettings() {
   toggleSidebar()
 }
 
-document.onkeydown = handleKeydown //add event listener? capture vs. bubble
+document.onkeydown = handleKeydown
 text.onclick = toggleText
 sidebarToggle.onclick = toggleSidebar
 mainView.ontouchmove = function(e) { e.preventDefault() } //prevent mobile scroll
