@@ -72,7 +72,6 @@ main {
     text-decoration: none;
     color: white;
     cursor: pointer;
-    padding: 0.5em;
 }
 
 #sidebar .checked:before {
@@ -88,10 +87,11 @@ main {
 
 #sidebar-toggle {
     color: white;
-    position: absolute;
+    position: fixed;
     right: 0;
-    margin: 0.5em 0;
-    cursor: pointer;
+    margin: 0.5em;
+    height: 2em;
+    display: block;
     opacity: .33;
     transition: opacity .5s;
     z-index: 1;
@@ -101,14 +101,6 @@ main {
 #sidebar-toggle:focus-within,
 #sidebar-toggle.open {
     opacity: 1;
-}
-
-
-#sidebar-toggle a {
-    height: 2em;
-    display: block;
-    right: 0.5em;
-    position: absolute;
 }
 
 #sidebar-toggle span {

@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <div id="sidebar-toggle"><a href="javascript:void(0);"><span></span></a></div>
+    <a id="sidebar-toggle" href="javascript:void(0);"><span></span></a>
     <main id="main">
         <div id="sidebar">
             <div></div>
@@ -28,24 +28,24 @@
                 <li>
                     <table>
                         <tr>
-                            <td><input type="text" value="inhale"/></td>
-                            <td><input type="number" min="2" max="10" value="4"></td>
+                            <td><input type="text" name="word" value="inhale"/></td>
+                            <td><input type="number" name="time" min="2" max="10" value="4"></td>
                         </tr>
                         <tr>
-                            <td><input type="text" value="hold"/></td>
-                            <td><input type="number" min="2" max="10" value="4"></td>
+                            <td><input type="text" name="word" value="hold"/></td>
+                            <td><input type="number" name="time" min="0" max="10" value="4"></td>
                         </tr>
                         <tr>
-                            <td><input type="text" value="exhale"/></td>
-                            <td><input type="number" min="2" max="10" value="4"></td>
+                            <td><input type="text" name="word" value="exhale"/></td>
+                            <td><input type="number" name="time" min="2" max="10" value="4"></td>
                         </tr>
                         <tr>
-                            <td><input type="text" value="pause"/></td>
-                            <td><input type="number" min="2" max="10" value="4"></td>
+                            <td><input type="text" name="word" value="pause"/></td>
+                            <td><input type="number" name="time" min="0" max="10" value="4"></td>
                         </tr>
                         <tr>
-                            <td><input type="button" value="reset" onclick="resetSettings()"/></td>
-                            <td><input type="button" value="save" onclick="saveSettings()"/></td>
+                            <td><input type="button" value="reset" name="reset" onclick="resetSettings()"/></td>
+                            <td><input type="button" value="save" name="save" onclick="saveSettings()"/></td>
                         </tr>
                     </table>
                 </li>
