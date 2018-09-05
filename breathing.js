@@ -15,7 +15,7 @@ function breathe() {
   circle.style = `transition: all ${numbers[0]}s ease-in-out 0s; transform: scale(1);`
 
   window.setTimeout(function() {
-    if (words[1] != "")
+    if (numbers[1] > 0)
       text.textContent = words[1]
 
     window.setTimeout(function() {
@@ -23,7 +23,7 @@ function breathe() {
       circle.style = `transition: all ${numbers[2]}s ease-in-out 0s; transform: scale(0.25);`
 
       window.setTimeout(function() {
-        if (words[3] != "")
+        if (numbers[3] > 0)
           text.textContent = words[3]
 
         window.setTimeout(breathe, numbers[3] * 1000)
