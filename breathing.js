@@ -78,8 +78,8 @@ function handleKeypress(e){
         toggleNoSleep()
       else
         toggleSidebar()
+     sidebarToggle.focus()
    }
-   sidebarToggle.focus()
  }
 
 function saveSettings() {
@@ -102,7 +102,7 @@ function saveSettings() {
     words[i] = textNodes[i].value
     count[i] = numberNodes[i].value
   }
-  toggleSidebar()
+  closeSidebar()
 }
 
 function resetSettings() {
@@ -116,7 +116,7 @@ function resetSettings() {
     textNodes[i].value = words[i]
     numberNodes[i].value = count[i]
   }
-  toggleSidebar()
+  closeSidebar()
 }
 
 document.onkeypress = handleKeypress
