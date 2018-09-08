@@ -15,6 +15,7 @@ function toggleNoSleep() {
         noSleepToggle.className = "checked";
         noSleepEnabled = true;
     }
+    toggleSidebar()
 }
 
 noSleepToggle.onclick = toggleNoSleep;

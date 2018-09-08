@@ -3,7 +3,7 @@ var text = document.getElementById("text")
 var main = document.getElementById("main")
 var mainView = document.getElementById("main-view")
 var sidebarToggle = document.getElementById("sidebar-toggle")
-var numbers = [4, 4, 4, 4]
+var count = [4, 4, 4, 4]
 var words = ["inhale", "hold", "exhale", "pause"]
 var sidebarOpen = false
 var textDisplay = true
@@ -12,28 +12,28 @@ var textDisplay = true
 function breathe() {
   
   text.textContent = words[0]
-  circle.style.transition = `all ${numbers[0]}s ease-in-out`
-  circle.style.webkitTransition = `all ${numbers[0]}s ease-in-out`
+  circle.style.transition = `all ${count[0]}s ease-in-out`
+  circle.style.webkitTransition = `all ${count[0]}s ease-in-out`
   circle.style.transform = "scale(1)"
 
   window.setTimeout(function() {
-    if (numbers[1] > 0)
+    if (count[1] > 0)
       text.textContent = words[1]
 
     window.setTimeout(function() {
       text.textContent = words[2]
-      circle.style.transition = `all ${numbers[2]}s ease-in-out`
-      circle.style.webkitTransition = `all ${numbers[2]}s ease-in-out`
+      circle.style.transition = `all ${count[2]}s ease-in-out`
+      circle.style.webkitTransition = `all ${count[2]}s ease-in-out`
       circle.style.transform = "scale(0.25)"
 
       window.setTimeout(function() {
-        if (numbers[3] > 0)
+        if (count[3] > 0)
           text.textContent = words[3]
 
-        window.setTimeout(breathe, numbers[3] * 1000)
-      }, numbers[2] * 1000)
-    }, numbers[1] * 1000)
-  }, numbers[0] * 1000)
+        window.setTimeout(breathe, count[3] * 1000)
+      }, count[2] * 1000)
+    }, count[1] * 1000)
+  }, count[0] * 1000)
 }
 
 function toggleText(event) {
@@ -67,16 +67,19 @@ function toggleSidebar() {
   (sidebarOpen) ? closeSidebar() : openSidebar()
 }
 
-function handleKeydown(e){
+function handleKeypress(e){
   var key = e.keyCode || e.which
    if (key == 13){
-      if (["time", "word"].indexOf(e.target.name) > -1)
+      if (["count", "word", "save"].indexOf(e.target.name) > -1)
         saveSettings()
-      else if (!sidebarOpen && e.target.id != "sidebar-toggle")
-        openSidebar()
+      else if (e.target.name == "reset")
+        resetSettings()
+      else if (e.target.id == "noSleepToggle")
+        toggleNoSleep()
+      else
+        toggleSidebar()
    }
-   else if (key == 27 && sidebarOpen)
-    closeSidebar()
+   sidebarToggle.focus()
  }
 
 function saveSettings() {
@@ -97,13 +100,13 @@ function saveSettings() {
 
   for (let i = 0; i < 4; i++) {
     words[i] = textNodes[i].value
-    numbers[i] = numberNodes[i].value
+    count[i] = numberNodes[i].value
   }
   toggleSidebar()
 }
 
 function resetSettings() {
-  numbers = [4, 4, 4, 4]
+  count = [4, 4, 4, 4]
   words = ["inhale", "hold", "exhale", "pause"]
 
   let textNodes = document.querySelectorAll("input[type='text']")
@@ -111,12 +114,12 @@ function resetSettings() {
 
   for (let i = 0; i < 4; i++) {
     textNodes[i].value = words[i]
-    numberNodes[i].value = numbers[i]
+    numberNodes[i].value = count[i]
   }
   toggleSidebar()
 }
 
-document.onkeydown = handleKeydown
+document.onkeypress = handleKeypress
 text.onclick = toggleText
 sidebarToggle.onclick = toggleSidebar
 mainView.ontouchmove = function(e) { e.preventDefault() } //prevent mobile scroll

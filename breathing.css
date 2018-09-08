@@ -88,6 +88,7 @@ main {
 #sidebar-toggle {
     color: white;
     position: fixed;
+    outline: none;
     right: 0;
     margin: 0.5em;
     height: 2em;
