@@ -3,7 +3,7 @@ var text = document.getElementById("text")
 var main = document.getElementById("main")
 var mainView = document.getElementById("main-view")
 var sidebarToggle = document.getElementById("sidebar-toggle")
-var count = [4, 4, 4, 4]
+var time = [4, 4, 4, 4]
 var words = ["inhale", "hold", "exhale", "pause"]
 var sidebarOpen = false
 var textDisplay = true
@@ -12,28 +12,28 @@ var textDisplay = true
 function breathe() {
   
   text.textContent = words[0]
-  circle.style.transition = `all ${count[0]}s ease-in-out`
-  circle.style.webkitTransition = `all ${count[0]}s ease-in-out`
+  circle.style.transition = `all ${time[0]}s ease-in-out`
+  circle.style.webkitTransition = `all ${time[0]}s ease-in-out`
   circle.style.transform = "scale(1)"
 
   window.setTimeout(function() {
-    if (count[1] > 0)
+    if (time[1] > 0)
       text.textContent = words[1]
 
     window.setTimeout(function() {
       text.textContent = words[2]
-      circle.style.transition = `all ${count[2]}s ease-in-out`
-      circle.style.webkitTransition = `all ${count[2]}s ease-in-out`
+      circle.style.transition = `all ${time[2]}s ease-in-out`
+      circle.style.webkitTransition = `all ${time[2]}s ease-in-out`
       circle.style.transform = "scale(0.25)"
 
       window.setTimeout(function() {
-        if (count[3] > 0)
+        if (time[3] > 0)
           text.textContent = words[3]
 
-        window.setTimeout(breathe, count[3] * 1000)
-      }, count[2] * 1000)
-    }, count[1] * 1000)
-  }, count[0] * 1000)
+        window.setTimeout(breathe, time[3] * 1000)
+      }, time[2] * 1000)
+    }, time[1] * 1000)
+  }, time[0] * 1000)
 }
 
 function toggleText(event) {
@@ -70,7 +70,7 @@ function toggleSidebar() {
 function handleKeypress(e){
   var key = e.keyCode || e.which
    if (key == 13){
-      if (["count", "word", "save"].indexOf(e.target.name) > -1)
+      if (["time", "word", "save"].indexOf(e.target.name) > -1)
         saveSettings()
       else if (e.target.name == "reset")
         resetSettings()
@@ -100,13 +100,13 @@ function saveSettings() {
 
   for (let i = 0; i < 4; i++) {
     words[i] = textNodes[i].value
-    count[i] = numberNodes[i].value
+    time[i] = numberNodes[i].value
   }
-  closeSidebar()
+  toggleSidebar()
 }
 
 function resetSettings() {
-  count = [4, 4, 4, 4]
+  time = [4, 4, 4, 4]
   words = ["inhale", "hold", "exhale", "pause"]
 
   let textNodes = document.querySelectorAll("input[type='text']")
@@ -114,9 +114,9 @@ function resetSettings() {
 
   for (let i = 0; i < 4; i++) {
     textNodes[i].value = words[i]
-    numberNodes[i].value = count[i]
+    numberNodes[i].value = time[i]
   }
-  closeSidebar()
+  toggleSidebar()
 }
 
 document.onkeypress = handleKeypress
