@@ -10,7 +10,7 @@ var textDisplay = true
 
 
 function breathe() {
-  
+
   text.textContent = words[0]
   circle.style.transition = `all ${time[0]}s ease-in-out`
   circle.style.webkitTransition = `all ${time[0]}s ease-in-out`
@@ -57,38 +57,38 @@ function openSidebar() {
 }
 
 function closeSidebar() {
-  window.scrollTo(0,0)
+  window.scrollTo(0, 0)
   main.style.transform = "translateX(0)"
   sidebarOpen = false
   sidebarToggle.className = ""
 }
 
 function toggleSidebar() {
-  (sidebarOpen) ? closeSidebar() : openSidebar()
+  (sidebarOpen) ? closeSidebar(): openSidebar()
 }
 
-function handleKeypress(e){
+function handleKeypress(e) {
   var key = e.keyCode || e.which
-   if (key == 13){
-      if (["time", "word", "save"].indexOf(e.target.name) > -1)
-        saveSettings()
-      else if (e.target.name == "reset")
-        resetSettings()
-      else if (e.target.id == "noSleepToggle")
-        toggleNoSleep()
-      else
-        toggleSidebar()
-     sidebarToggle.focus()
-   }
- }
+  if (key == 13) {
+    if (["time", "word", "save"].indexOf(e.target.name) > -1)
+      saveSettings()
+    else if (e.target.name == "reset")
+      resetSettings()
+    else if (e.target.id == "noSleepToggle")
+      toggleNoSleep()
+    else
+      toggleSidebar()
+    sidebarToggle.focus()
+  }
+}
 
 function saveSettings() {
 
   let textNodes = document.querySelectorAll("input[type='text']")
   let numberNodes = document.querySelectorAll("input[type='number']")
 
-  for (let i = 0; i < 4; i++){
-    if (numberNodes[i].value <= 0 && i % 2 == 1){
+  for (let i = 0; i < 4; i++) {
+    if (numberNodes[i].value <= 0 && i % 2 == 1) {
       numberNodes[i].value = 0
       textNodes[i].value = ""
     }
@@ -101,6 +101,7 @@ function saveSettings() {
   for (let i = 0; i < 4; i++) {
     words[i] = textNodes[i].value
     time[i] = numberNodes[i].value
+    Cookies.set(i, `${textNodes[i].value}:${numberNodes[i].value}`, { expires: 30 })
   }
   toggleSidebar()
 }
@@ -115,12 +116,27 @@ function resetSettings() {
   for (let i = 0; i < 4; i++) {
     textNodes[i].value = words[i]
     numberNodes[i].value = time[i]
+    Cookies.set(i, `${textNodes[i].value}:${numberNodes[i].value}`, { expires: 30 })
   }
   toggleSidebar()
+}
+
+function loadCookie() {
+  if (Cookies.get("0") !== undefined) {
+    let textNodes = document.querySelectorAll("input[type='text']")
+    let numberNodes = document.querySelectorAll("input[type='number']")
+
+    for (let i = 0; i < 4; i++) {
+      let cookie = Cookies.get(`${i}`).split(":")
+      textNodes[i].value = words[i] = cookie[0]
+      numberNodes[i].value = time[i] = cookie[1]
+    }
+  }
 }
 
 document.onkeypress = handleKeypress
 text.onclick = toggleText
 sidebarToggle.onclick = toggleSidebar
 mainView.ontouchmove = function(e) { e.preventDefault() } //prevent mobile scroll
+loadCookie()
 window.setTimeout(breathe, 4000)
