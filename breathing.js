@@ -101,7 +101,7 @@ function saveSettings() {
   for (let i = 0; i < 4; i++) {
     words[i] = textNodes[i].value
     time[i] = numberNodes[i].value
-    Cookies.set(i, `${textNodes[i].value}:${numberNodes[i].value}`, { expires: 30 })
+    Cookies.set(i, [textNodes[i].value, numberNodes[i].value], { expires: 30 })
   }
   toggleSidebar()
 }
@@ -116,18 +116,18 @@ function resetSettings() {
   for (let i = 0; i < 4; i++) {
     textNodes[i].value = words[i]
     numberNodes[i].value = time[i]
-    Cookies.set(i, `${textNodes[i].value}:${numberNodes[i].value}`, { expires: 30 })
+    Cookies.set(i, [textNodes[i].value, numberNodes[i].value], { expires: 30 })
   }
   toggleSidebar()
 }
 
-function loadCookie() {
+function loadCookies() {
   if (Cookies.get("0") !== undefined) {
     let textNodes = document.querySelectorAll("input[type='text']")
     let numberNodes = document.querySelectorAll("input[type='number']")
 
     for (let i = 0; i < 4; i++) {
-      let cookie = Cookies.get(`${i}`).split(":")
+      let cookie = Cookies.getJSON(`${i}`)
       textNodes[i].value = words[i] = cookie[0]
       numberNodes[i].value = time[i] = cookie[1]
     }
@@ -138,5 +138,5 @@ document.onkeypress = handleKeypress
 text.onclick = toggleText
 sidebarToggle.onclick = toggleSidebar
 mainView.ontouchmove = function(e) { e.preventDefault() } //prevent mobile scroll
-loadCookie()
+loadCookies()
 window.setTimeout(breathe, 4000)
