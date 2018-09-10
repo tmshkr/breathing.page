@@ -84,8 +84,10 @@ function handleKeypress(e) {
 
 function saveSettings() {
 
+  let settings = []
   let textNodes = document.querySelectorAll("input[type='text']")
   let numberNodes = document.querySelectorAll("input[type='number']")
+
 
   for (let i = 0; i < 4; i++) {
     if (numberNodes[i].value <= 0 && i % 2 == 1) {
@@ -101,35 +103,38 @@ function saveSettings() {
   for (let i = 0; i < 4; i++) {
     words[i] = textNodes[i].value
     time[i] = numberNodes[i].value
-    Cookies.set(i, [textNodes[i].value, numberNodes[i].value], { expires: 30 })
+    settings[i] = [words[i], time[i]]
   }
+  window.localStorage.setItem("settings", JSON.stringify(settings))
   toggleSidebar()
 }
 
 function resetSettings() {
   time = [4, 4, 4, 4]
   words = ["inhale", "hold", "exhale", "pause"]
-
+  let settings = []
   let textNodes = document.querySelectorAll("input[type='text']")
   let numberNodes = document.querySelectorAll("input[type='number']")
 
   for (let i = 0; i < 4; i++) {
     textNodes[i].value = words[i]
     numberNodes[i].value = time[i]
-    Cookies.set(i, [textNodes[i].value, numberNodes[i].value], { expires: 30 })
+    settings[i] = [words[i], time[i]]
   }
+  window.localStorage.setItem("settings", JSON.stringify(settings))
   toggleSidebar()
 }
 
-function loadCookies() {
-  if (Cookies.get("0") !== undefined) {
+function loadSettings() {
+  let settings = window.localStorage.getItem("settings")
+  if (settings !== null) {
+    settings = JSON.parse(settings)
     let textNodes = document.querySelectorAll("input[type='text']")
     let numberNodes = document.querySelectorAll("input[type='number']")
 
     for (let i = 0; i < 4; i++) {
-      let cookie = Cookies.getJSON(`${i}`)
-      textNodes[i].value = words[i] = cookie[0]
-      numberNodes[i].value = time[i] = cookie[1]
+      textNodes[i].value = words[i] = settings[i][0]
+      numberNodes[i].value = time[i] = settings[i][1]
     }
   }
 }
@@ -138,5 +143,5 @@ document.onkeypress = handleKeypress
 text.onclick = toggleText
 sidebarToggle.onclick = toggleSidebar
 mainView.ontouchmove = function(e) { e.preventDefault() } //prevent mobile scroll
-loadCookies()
+loadSettings()
 window.setTimeout(breathe, 4000)
