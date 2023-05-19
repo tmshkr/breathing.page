@@ -3,8 +3,8 @@ html {
     height: 100%;
     width: 100%;
     text-align: center;
-    background-color: #87ceeb;
-    font-size: 21px;
+    background-color: #27AAE1;
+    font-size: 36px;
     cursor: default;
     overflow: hidden;
 }
@@ -12,10 +12,9 @@ html {
   body {
     position: fixed;
     margin: 0;
-    height: 100%
-    padding: 0;
-    overflow: hidden;
-  }
+    height: 100%;
+    width: 100%;
+}
   
 main {
     will-change: transform;
