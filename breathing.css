@@ -79,7 +79,7 @@ main {
     display: inline-block;
     width: 0.3em;
     height: 0.6em;
-    border: solid #aaa;
+    border: solid #06364b;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
     margin: 0 0.7em 0.1em;
