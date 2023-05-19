@@ -4,7 +4,7 @@ var main = document.getElementById("main")
 var mainView = document.getElementById("main-view")
 var sidebarToggle = document.getElementById("sidebar-toggle")
 var time = [4, 4, 4, 4]
-var words = ["inhale", "hold", "exhale", "pause"]
+var words = ["breathe in", "hold your breath", "breath out", "hold your breath"]
 var sidebarOpen = false
 var textDisplay = true
 
