@@ -35,6 +35,7 @@ body {
     list-style: none;
     padding: 1em;
     margin: 0;
+    text-align: left;
 }
 
 .bp-drawer .drawer-menu li {
