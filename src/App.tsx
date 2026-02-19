@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import NoSleep from "nosleep.js";
+import { Button, Drawer, DrawerSize } from "@blueprintjs/core";
 
 type Setting = [string, number];
 
@@ -24,7 +25,7 @@ export default function App() {
   const [settings, setSettings] = useState<Setting[]>(loadSettings);
   const [text, setText] = useState("ready");
   const [textVisible, setTextVisible] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [noSleepEnabled, setNoSleepEnabled] = useState(false);
   const [circleScale, setCircleScale] = useState(0.25);
   const [circleTransition, setCircleTransition] = useState("all 4.0s ease-in-out");
@@ -83,30 +84,9 @@ export default function App() {
     }
   }
 
-  function closeSidebar() {
+  function closeDrawer() {
     window.scrollTo(0, 0);
-    setSidebarOpen(false);
-  }
-
-  function toggleSidebar() {
-    setSidebarOpen((open) => !open);
-  }
-
-  function handleKeyPress(e: React.KeyboardEvent) {
-    const key = e.keyCode || e.which;
-    if (key === 13) {
-      const target = e.target as HTMLInputElement;
-      if (["time", "word", "save"].indexOf(target.name) > -1) {
-        saveSettings();
-      } else if (target.name === "reset") {
-        resetSettings();
-      } else if (target.id === "noSleepToggle") {
-        toggleNoSleep();
-      } else {
-        toggleSidebar();
-      }
-      document.getElementById("sidebar-toggle")?.focus();
-    }
+    setDrawerOpen(false);
   }
 
   function saveSettings() {
@@ -126,7 +106,7 @@ export default function App() {
     window.localStorage.setItem("settings", JSON.stringify(newSettings));
     clearBreathTimeout();
     breathe(newSettings);
-    closeSidebar();
+    closeDrawer();
   }
 
   function resetSettings() {
@@ -135,7 +115,7 @@ export default function App() {
     window.localStorage.setItem("settings", JSON.stringify(DEFAULT_SETTINGS));
     clearBreathTimeout();
     breathe(DEFAULT_SETTINGS);
-    closeSidebar();
+    closeDrawer();
   }
 
   function toggleNoSleep() {
@@ -146,7 +126,7 @@ export default function App() {
       noSleepRef.current?.enable();
       setNoSleepEnabled(true);
     }
-    toggleSidebar();
+    closeDrawer();
   }
 
   function handleFormChange(index: number, field: "word" | "time", value: string) {
@@ -170,22 +150,24 @@ export default function App() {
 
   return (
     <>
-      <a
-        id="sidebar-toggle"
-        tabIndex={0}
-        className={sidebarOpen ? "open" : ""}
-        onClick={toggleSidebar}
-        onKeyDown={handleKeyPress}
+      <Button
+        id="menu-button"
+        icon="menu"
+        minimal
+        onClick={() => setDrawerOpen(true)}
+        aria-label="Open menu"
+      />
+
+      <Drawer
+        isOpen={drawerOpen}
+        onClose={closeDrawer}
+        position="right"
+        size={DrawerSize.SMALL}
+        title="Settings"
+        className="bp-drawer"
       >
-        <span></span>
-      </a>
-      <main
-        id="main"
-        style={{ transform: sidebarOpen ? "translateX(-15em)" : "translateX(0)" }}
-      >
-        <div id="sidebar">
-          <div></div>
-          <ul>
+        <div className="bp5-drawer-body">
+          <ul className="drawer-menu">
             <li>
               <table>
                 <tbody>
@@ -213,37 +195,24 @@ export default function App() {
                   ))}
                   <tr>
                     <td>
-                      <input
-                        type="button"
-                        value="reset"
-                        name="reset"
-                        onClick={resetSettings}
-                        onKeyDown={handleKeyPress}
-                      />
+                      <Button name="reset" onClick={resetSettings}>reset</Button>
                     </td>
                     <td>
-                      <input
-                        type="button"
-                        value="save"
-                        name="save"
-                        onClick={saveSettings}
-                        onKeyDown={handleKeyPress}
-                      />
+                      <Button name="save" intent="primary" onClick={saveSettings}>save</Button>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </li>
             <li>
-              <a
+              <Button
                 id="noSleepToggle"
-                tabIndex={0}
-                className={noSleepEnabled ? "checked" : ""}
+                minimal
+                icon={noSleepEnabled ? "tick" : undefined}
                 onClick={toggleNoSleep}
-                onKeyDown={handleKeyPress}
               >
                 Prevent Display Sleep
-              </a>
+              </Button>
             </li>
             <li>
               <a href="https://github.com/tmshkr/breathing/" target="_blank" rel="noreferrer">
@@ -261,31 +230,33 @@ export default function App() {
             </li>
           </ul>
         </div>
+      </Drawer>
+
+      <div
+        id="main-view"
+        onTouchMove={(e) => e.preventDefault()}
+      >
         <div
-          id="main-view"
-          onTouchMove={(e) => e.preventDefault()}
+          id="circle"
+          style={{
+            transform: `scale(${circleScale})`,
+            transition: circleTransition,
+            WebkitTransition: circleTransition,
+          }}
         >
-          <div
-            id="circle"
-            style={{
-              transform: `scale(${circleScale})`,
-              transition: circleTransition,
-              WebkitTransition: circleTransition,
-            }}
-          >
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="50" />
-            </svg>
-          </div>
-          <h2
-            id="text"
-            style={{ color: textVisible ? "white" : "transparent" }}
-            onClick={handleTextClick}
-          >
-            {text}
-          </h2>
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="50" />
+          </svg>
         </div>
-      </main>
+        <h2
+          id="text"
+          style={{ color: textVisible ? "white" : "transparent" }}
+          onClick={handleTextClick}
+        >
+          {text}
+        </h2>
+      </div>
     </>
   );
 }
+
