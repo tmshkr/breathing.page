@@ -1,17 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import NoSleep from "nosleep.js";
 
-const DEFAULT_SETTINGS = [
+type Setting = [string, number];
+
+const DEFAULT_SETTINGS: Setting[] = [
   ["inhale", 4],
   ["hold", 4],
   ["exhale", 4],
   ["pause", 4],
 ];
 
-function loadSettings() {
+function loadSettings(): Setting[] {
   try {
     const saved = window.localStorage.getItem("settings");
-    if (saved !== null) return JSON.parse(saved);
+    if (saved !== null) return JSON.parse(saved) as Setting[];
   } catch (e) {
     // ignore
   }
@@ -19,17 +21,17 @@ function loadSettings() {
 }
 
 export default function App() {
-  const [settings, setSettings] = useState(loadSettings);
+  const [settings, setSettings] = useState<Setting[]>(loadSettings);
   const [text, setText] = useState("ready");
   const [textVisible, setTextVisible] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [noSleepEnabled, setNoSleepEnabled] = useState(false);
   const [circleScale, setCircleScale] = useState(0.25);
   const [circleTransition, setCircleTransition] = useState("all 4.0s ease-in-out");
-  const [formSettings, setFormSettings] = useState(loadSettings);
+  const [formSettings, setFormSettings] = useState<Setting[]>(loadSettings);
 
-  const noSleepRef = useRef(null);
-  const breatheTimeoutRef = useRef(null);
+  const noSleepRef = useRef<NoSleep | null>(null);
+  const breatheTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearBreathTimeout = useCallback(() => {
     if (breatheTimeoutRef.current !== null) {
@@ -38,7 +40,7 @@ export default function App() {
     }
   }, []);
 
-  const breathe = useCallback((currentSettings) => {
+  const breathe = useCallback((currentSettings: Setting[]) => {
     const words = currentSettings.map((s) => s[0]);
     const time = currentSettings.map((s) => Number(s[1]));
 
@@ -69,20 +71,16 @@ export default function App() {
     noSleepRef.current = new NoSleep();
     breatheTimeoutRef.current = setTimeout(() => breathe(settings), 4000);
     return () => clearBreathTimeout();
-  }, []);
+  }, [breathe, clearBreathTimeout]);
 
   function handleTextClick() {
     if (textVisible) {
       setTextVisible(false);
-      document.onclick = handleTextClick;
+      document.addEventListener("click", handleTextClick);
     } else {
       setTextVisible(true);
-      document.onclick = null;
+      document.removeEventListener("click", handleTextClick);
     }
-  }
-
-  function openSidebar() {
-    setSidebarOpen(true);
   }
 
   function closeSidebar() {
@@ -94,15 +92,15 @@ export default function App() {
     setSidebarOpen((open) => !open);
   }
 
-  function handleKeyPress(e) {
+  function handleKeyPress(e: React.KeyboardEvent) {
     const key = e.keyCode || e.which;
     if (key === 13) {
-      const name = e.target.name;
-      if (["time", "word", "save"].indexOf(name) > -1) {
+      const target = e.target as HTMLInputElement;
+      if (["time", "word", "save"].indexOf(target.name) > -1) {
         saveSettings();
-      } else if (name === "reset") {
+      } else if (target.name === "reset") {
         resetSettings();
-      } else if (e.target.id === "noSleepToggle") {
+      } else if (target.id === "noSleepToggle") {
         toggleNoSleep();
       } else {
         toggleSidebar();
@@ -112,7 +110,7 @@ export default function App() {
   }
 
   function saveSettings() {
-    const newSettings = formSettings.map(([word, time], i) => {
+    const newSettings: Setting[] = formSettings.map(([word, time], i) => {
       let t = Number(time);
       let w = word;
       if (t <= 0 && i % 2 === 1) {
@@ -142,19 +140,23 @@ export default function App() {
 
   function toggleNoSleep() {
     if (noSleepEnabled) {
-      noSleepRef.current.disable();
+      noSleepRef.current?.disable();
       setNoSleepEnabled(false);
     } else {
-      noSleepRef.current.enable();
+      noSleepRef.current?.enable();
       setNoSleepEnabled(true);
     }
     toggleSidebar();
   }
 
-  function handleFormChange(index, field, value) {
+  function handleFormChange(index: number, field: "word" | "time", value: string) {
     setFormSettings((prev) => {
-      const next = prev.map((item) => [...item]);
-      next[index][field === "word" ? 0 : 1] = value;
+      const next: Setting[] = prev.map(([w, t]) => [w, t]);
+      if (field === "word") {
+        next[index][0] = value;
+      } else {
+        next[index][1] = Number(value);
+      }
       return next;
     });
   }
@@ -170,7 +172,7 @@ export default function App() {
     <>
       <a
         id="sidebar-toggle"
-        tabIndex="0"
+        tabIndex={0}
         className={sidebarOpen ? "open" : ""}
         onClick={toggleSidebar}
         onKeyDown={handleKeyPress}
@@ -235,7 +237,7 @@ export default function App() {
             <li>
               <a
                 id="noSleepToggle"
-                tabIndex="0"
+                tabIndex={0}
                 className={noSleepEnabled ? "checked" : ""}
                 onClick={toggleNoSleep}
                 onKeyDown={handleKeyPress}
