@@ -31,42 +31,111 @@ body {
     opacity: 1;
 }
 
-.bp-drawer .drawer-menu {
-    list-style: none;
-    padding: 1em;
-    margin: 0;
-    text-align: left;
+.side-menu-drawer .bp5-drawer {
+    background:
+        radial-gradient(100% 50% at 100% 0%, rgba(66, 173, 255, 0.16) 0%, rgba(66, 173, 255, 0) 75%),
+        linear-gradient(160deg, #f7f9fd 0%, #eaf0f9 100%);
 }
 
-.bp-drawer .drawer-menu li {
-    padding: 0.75em 0;
+.side-menu-drawer .bp5-heading {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.bp-drawer .drawer-menu {
+    list-style: none;
+    padding: 1rem;
+    margin: 0;
+    text-align: left;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.bp-drawer .drawer-menu .menu-section {
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(32, 57, 94, 0.12);
+    border-radius: 14px;
+    padding: 0.9rem;
+    box-shadow: 0 8px 20px rgba(12, 28, 51, 0.08);
+}
+
+.bp-drawer .menu-heading {
+    margin: 0 0 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #28436a;
+}
+
+.bp-drawer .phase-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.4rem;
+}
+
+.bp-drawer .phase-table td {
+    vertical-align: middle;
+}
+
+.bp-drawer input[type='text'],
+.bp-drawer input[type='number'] {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #c0cee3;
+    font-size: 15px;
+    padding: 0.45rem 0.55rem;
+    background: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.bp-drawer input[type='number'] {
+    max-width: 4.8rem;
+}
+
+.bp-drawer input[type='text']:focus,
+.bp-drawer input[type='number']:focus {
+    outline: none;
+    border-color: #2f80ed;
+    box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.18);
+}
+
+.bp-drawer .phase-table .bp5-button {
+    width: 100%;
+}
+
+.bp-drawer #noSleepToggle {
+    width: 100%;
+    justify-content: flex-start;
+    font-weight: 600;
 }
 
 .bp-drawer .drawer-menu li a {
     text-decoration: none;
-    color: inherit;
+    color: #1b4d8f;
+    font-weight: 600;
+    transition: color 0.2s;
 }
 
-.bp-drawer table {
-    border-spacing: 0.4em;
-}
-
-.bp-drawer input[type='text'] {
-    width: 5em;
-    font-size: 16px;
-    padding: 0.25em;
-}
-
-.bp-drawer input[type='number'] {
-    width: 3em;
-    font-size: 16px;
-    padding: 0.25em;
+.bp-drawer .drawer-menu li a:hover,
+.bp-drawer .drawer-menu li a:focus {
+    color: #0e2f5d;
 }
 
 .bp-drawer input[type=number]::-webkit-inner-spin-button,
 .bp-drawer input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 #main-view {

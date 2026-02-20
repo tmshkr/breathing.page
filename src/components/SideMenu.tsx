@@ -94,25 +94,35 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
         position="right"
         size={DrawerSize.SMALL}
         title="Settings"
-        className="bp-drawer"
+        className="bp-drawer side-menu-drawer"
       >
         <div className="bp5-drawer-body">
           <ul className="drawer-menu">
-            <li>
-              <table>
+            <li className="menu-section">
+              <h3 className="menu-heading">Breathing Phases</h3>
+              <table className="phase-table">
                 <tbody>
                   {phases.map((phase, i) => (
                     <tr key={phase.label}>
                       <td>
+                        <label className="visually-hidden" htmlFor={`phase-word-${phase.label}`}>
+                          {phase.label} label
+                        </label>
                         <input
+                          id={`phase-word-${phase.label}`}
                           type="text"
                           name="word"
                           value={formSettings[i][0]}
+                          placeholder={phase.label}
                           onChange={(e) => handleFormChange(i, "word", e.target.value)}
                         />
                       </td>
                       <td>
+                        <label className="visually-hidden" htmlFor={`phase-time-${phase.label}`}>
+                          {phase.label} seconds
+                        </label>
                         <input
+                          id={`phase-time-${phase.label}`}
                           type="number"
                           name="time"
                           min={phase.minTime}
@@ -134,7 +144,7 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
                 </tbody>
               </table>
             </li>
-            <li>
+            <li className="menu-section">
               <Button
                 id="noSleepToggle"
                 minimal
@@ -144,12 +154,12 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
                 Prevent Display Sleep
               </Button>
             </li>
-            <li>
+            <li className="menu-section">
               <a href="https://github.com/tmshkr/breathing/" target="_blank" rel="noreferrer">
                 GitHub Repository
               </a>
             </li>
-            <li>
+            <li className="menu-section">
               <a
                 href="https://github.com/tmshkr/breathing/blob/master/LICENSE"
                 target="_blank"
