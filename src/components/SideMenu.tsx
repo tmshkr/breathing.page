@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import NoSleep from "nosleep.js";
 import { Button, Drawer, DrawerSize } from "@blueprintjs/core";
 import { Setting, DEFAULT_SETTINGS, loadSettings } from "../types";
+import "./SideMenu.scss";
 
 interface SideMenuProps {
   onSettingsChange: (newSettings: Setting[]) => void;

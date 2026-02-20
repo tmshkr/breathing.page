@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import "./BreathingText.scss";
 
 interface BreathingTextProps {
   text: string;

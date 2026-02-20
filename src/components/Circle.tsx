@@ -1,3 +1,5 @@
+import "./Circle.scss";
+
 interface CircleProps {
   scale: number;
   transition: string;
