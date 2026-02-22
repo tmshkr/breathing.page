@@ -20,7 +20,7 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          npm ci
+          npm ci --force
           npm run build
 
       - name: Deploy 🚀
