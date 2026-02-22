@@ -1,0 +1,37 @@
+#circle {
+  display: inline-block;
+  width: 50vh;
+  height: 50vh;
+  margin-top: 10vh;
+  will-change: transform;
+  transform: scale(0.25);
+  -webkit-transition: all 4s ease-in-out;
+  -moz-transition: all 4s ease-in-out;
+  transition: all 4s ease-in-out;
+
+  circle {
+    fill: skyblue;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #circle {
+    width: 50vw;
+    height: 50vw;
+  }
+}
+
+@media screen and (orientation: portrait) {
+  #circle {
+    margin-top: 20vh;
+    width: 50vw;
+    height: 50vw;
+  }
+}
+
+@media screen and (orientation: landscape) {
+  #circle {
+    width: 50vh;
+    height: 50vh;
+  }
+}

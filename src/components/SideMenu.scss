@@ -1,0 +1,133 @@
+#menu-button {
+  position: fixed;
+  top: 0.5em;
+  right: 0.5em;
+  z-index: 1;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  color: white !important;
+  svg {
+    fill: white !important;
+  }
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+}
+
+.side-menu-drawer {
+  .bp5-drawer {
+    background:
+      radial-gradient(
+        100% 50% at 100% 0%,
+        rgba(66, 173, 255, 0.16) 0%,
+        rgba(66, 173, 255, 0) 75%
+      ),
+      linear-gradient(160deg, #f7f9fd 0%, #eaf0f9 100%);
+  }
+
+  .bp5-heading {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+}
+
+.bp-drawer {
+  .drawer-menu {
+    list-style: none;
+    padding: 1rem;
+    margin: 0;
+    text-align: left;
+    display: grid;
+    gap: 0.75rem;
+
+    .menu-section {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(32, 57, 94, 0.12);
+      border-radius: 14px;
+      padding: 0.9rem;
+      box-shadow: 0 8px 20px rgba(12, 28, 51, 0.08);
+    }
+
+    li a {
+      text-decoration: none;
+      color: #1b4d8f;
+      font-weight: 600;
+      transition: color 0.2s;
+
+      &:hover,
+      &:focus {
+        color: #0e2f5d;
+      }
+    }
+  }
+
+  .menu-heading {
+    margin: 0 0 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #28436a;
+  }
+
+  .phase-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.4rem;
+
+    td {
+      vertical-align: middle;
+    }
+
+    .bp5-button {
+      width: 100%;
+    }
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #c0cee3;
+    font-size: 15px;
+    padding: 0.45rem 0.55rem;
+    background: #ffffff;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #2f80ed;
+      box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.18);
+    }
+  }
+
+  input[type="number"] {
+    max-width: 4.8rem;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  #noSleepToggle {
+    width: 100%;
+    justify-content: flex-start;
+    font-weight: 600;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

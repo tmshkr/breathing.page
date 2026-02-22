@@ -1,0 +1,22 @@
+html {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  background-color: #333;
+  font-size: 21px;
+  cursor: default;
+  overflow: hidden;
+}
+
+body {
+  position: fixed;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#main-view {
+  height: 100%;
+  width: 100%;
+}

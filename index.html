@@ -1,71 +1,22 @@
 <!DOCTYPE html>
-<html>
-
-<head>
+<html lang="en">
+  <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123790385-1"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-123790385-1');
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'UA-123790385-1');
     </script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="breathing.css" type="text/css" />
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="/favicon.ico" />
     <title>breathing</title>
-</head>
-
-<body>
-    <a id="sidebar-toggle" tabindex="0"><span></span></a>
-    <main id="main">
-        <div id="sidebar">
-            <div></div>
-            <ul>
-                <li>
-                    <table>
-                        <tr>
-                            <td><input type="text" name="word" value="inhale"/></td>
-                            <td><input type="number" name="time" min="2" max="10" value="4"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" name="word" value="hold"/></td>
-                            <td><input type="number" name="time" min="0" max="10" value="4"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" name="word" value="exhale"/></td>
-                            <td><input type="number" name="time" min="2" max="10" value="4"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" name="word" value="pause"/></td>
-                            <td><input type="number" name="time" min="0" max="10" value="4"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="button" value="reset" name="reset" onclick="resetSettings()"/></td>
-                            <td><input type="button" value="save" name="save" onclick="saveSettings()"/></td>
-                        </tr>
-                    </table>
-                </li>
-                <li><a id="noSleepToggle" tabindex="0">Prevent Display Sleep</a></li>
-                <li><a href="https://github.com/tmshkr/breathing/" target="_blank">GitHub Repository</a></li>
-                <li><a href="https://github.com/tmshkr/breathing/blob/master/LICENSE" target="_blank">License</a></li>
-            </ul>
-        </div>
-        <div id="main-view">
-            <div id="circle">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="50"/>
-                </svg>
-            </div>
-            <h2 id="text">ready</h2>
-        </div>
-    </main>
-    <script type="text/javascript" src="NoSleep.js"></script>
-    <script type="text/javascript" src="breathing.js"></script>
-</body>
-
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

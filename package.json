@@ -1,0 +1,31 @@
+{
+  "name": "breathing-page",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@blueprintjs/core": "^6.8.0",
+    "nosleep.js": "^0.12.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "overrides": {
+    "@blueprintjs/core": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "sass": "^1.97.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}
