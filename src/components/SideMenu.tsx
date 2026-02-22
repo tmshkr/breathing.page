@@ -60,7 +60,11 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
     closeDrawer();
   }
 
-  function handleFormChange(index: number, field: "word" | "time", value: string) {
+  function handleFormChange(
+    index: number,
+    field: "word" | "time",
+    value: string,
+  ) {
     setFormSettings((prev) => {
       const next: Setting[] = prev.map(([w, t]) => [w, t]);
       if (field === "word") {
@@ -106,7 +110,10 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
                   {phases.map((phase, i) => (
                     <tr key={phase.label}>
                       <td>
-                        <label className="visually-hidden" htmlFor={`phase-word-${phase.label}`}>
+                        <label
+                          className="visually-hidden"
+                          htmlFor={`phase-word-${phase.label}`}
+                        >
                           {phase.label} label
                         </label>
                         <input
@@ -115,11 +122,16 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
                           name="word"
                           value={formSettings[i][0]}
                           placeholder={phase.label}
-                          onChange={(e) => handleFormChange(i, "word", e.target.value)}
+                          onChange={(e) =>
+                            handleFormChange(i, "word", e.target.value)
+                          }
                         />
                       </td>
                       <td>
-                        <label className="visually-hidden" htmlFor={`phase-time-${phase.label}`}>
+                        <label
+                          className="visually-hidden"
+                          htmlFor={`phase-time-${phase.label}`}
+                        >
                           {phase.label} seconds
                         </label>
                         <input
@@ -129,17 +141,27 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
                           min={phase.minTime}
                           max="10"
                           value={formSettings[i][1]}
-                          onChange={(e) => handleFormChange(i, "time", e.target.value)}
+                          onChange={(e) =>
+                            handleFormChange(i, "time", e.target.value)
+                          }
                         />
                       </td>
                     </tr>
                   ))}
                   <tr>
                     <td>
-                      <Button name="reset" onClick={resetSettings}>reset</Button>
+                      <Button name="reset" onClick={resetSettings}>
+                        reset
+                      </Button>
                     </td>
                     <td>
-                      <Button name="save" intent="primary" onClick={saveSettings}>save</Button>
+                      <Button
+                        name="save"
+                        intent="primary"
+                        onClick={saveSettings}
+                      >
+                        save
+                      </Button>
                     </td>
                   </tr>
                 </tbody>
@@ -156,7 +178,11 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
               </Button>
             </li>
             <li className="menu-section">
-              <a href="https://github.com/tmshkr/breathing/" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/tmshkr/breathing.page/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 GitHub Repository
               </a>
             </li>
