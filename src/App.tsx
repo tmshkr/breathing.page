@@ -19,31 +19,27 @@ export default function App() {
     }
   }, []);
 
-  const breathe = useCallback((currentSettings: Setting[]) => {
-    const words = currentSettings.map((s) => s[0]);
-    const time = currentSettings.map((s) => Number(s[1]));
+  const breathe = useCallback((currentSettings: Setting[], phaseIndex = 0) => {
+    const [word, timeStr] = currentSettings[phaseIndex];
+    const duration = Number(timeStr);
 
-    setText(words[0]);
-    setCircleTransition(`all ${time[0]}s ease-in-out`);
-    setCircleScale(1);
+    // Show text always for inhale/exhale (even phases); only for hold/pause if duration > 0
+    if (phaseIndex % 2 === 0 || duration > 0) {
+      setText(word);
+    }
+
+    // Expand circle on inhale (phase 0), shrink on exhale (phase 2)
+    if (phaseIndex === 0) {
+      setCircleTransition(`all ${duration}s ease-in-out`);
+      setCircleScale(1);
+    } else if (phaseIndex === 2) {
+      setCircleTransition(`all ${duration}s ease-in-out`);
+      setCircleScale(0.25);
+    }
 
     breatheTimeoutRef.current = setTimeout(() => {
-      if (time[1] > 0) setText(words[1]);
-
-      breatheTimeoutRef.current = setTimeout(() => {
-        setText(words[2]);
-        setCircleTransition(`all ${time[2]}s ease-in-out`);
-        setCircleScale(0.25);
-
-        breatheTimeoutRef.current = setTimeout(() => {
-          if (time[3] > 0) setText(words[3]);
-
-          breatheTimeoutRef.current = setTimeout(() => {
-            breathe(currentSettings);
-          }, time[3] * 1000);
-        }, time[2] * 1000);
-      }, time[1] * 1000);
-    }, time[0] * 1000);
+      breathe(currentSettings, (phaseIndex + 1) % currentSettings.length);
+    }, duration * 1000);
   }, []);
 
   useEffect(() => {
