@@ -19,4 +19,10 @@ body {
 #main-view {
   height: 100%;
   width: 100%;
+  background: radial-gradient(
+    circle at 50% 40%,
+    var(--bg-accent, rgba(135, 206, 235, 0.06)) 0%,
+    transparent 60%
+  );
+  transition: --bg-accent 2s ease;
 }

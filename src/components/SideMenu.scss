@@ -119,6 +119,27 @@
     justify-content: flex-start;
     font-weight: 600;
   }
+
+  .extras-toggles {
+    display: grid;
+    gap: 0.5rem;
+
+    .bp5-control {
+      margin-bottom: 0;
+    }
+  }
+
+  .bp5-button {
+    transition: transform 0.15s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
 }
 
 .visually-hidden {

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import "./BreathingText.scss";
 
 interface BreathingTextProps {
@@ -7,9 +7,15 @@ interface BreathingTextProps {
 
 export default function BreathingText({ text }: BreathingTextProps) {
   const [visible, setVisible] = useState(true);
+  const [fading, setFading] = useState(false);
   const visibleRef = useRef(true);
 
-  // Stable reference so removeEventListener can find the same function.
+  useEffect(() => {
+    setFading(true);
+    const timer = setTimeout(() => setFading(false), 150);
+    return () => clearTimeout(timer);
+  }, [text]);
+
   const handleDocumentClick = useCallback(() => {
     visibleRef.current = true;
     setVisible(true);
@@ -17,8 +23,6 @@ export default function BreathingText({ text }: BreathingTextProps) {
   }, []);
 
   function handleClick(e: React.MouseEvent) {
-    // Stop propagation so this click doesn't immediately trigger
-    // the document listener we are about to add.
     e.stopPropagation();
     visibleRef.current = false;
     setVisible(false);
@@ -28,6 +32,7 @@ export default function BreathingText({ text }: BreathingTextProps) {
   return (
     <h2
       id="text"
+      className={fading ? "fading" : ""}
       style={{ color: visible ? "white" : "transparent" }}
       onClick={handleClick}
     >
