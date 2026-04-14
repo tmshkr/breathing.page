@@ -3,4 +3,9 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin-top: 10vh;
   font-size: 3em;
+  transition: opacity 0.15s ease, color 0.3s ease;
+
+  &.fading {
+    opacity: 0.3;
+  }
 }

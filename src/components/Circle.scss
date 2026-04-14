@@ -9,8 +9,55 @@
   -moz-transition: all 4s ease-in-out;
   transition: all 4s ease-in-out;
 
-  circle {
-    fill: skyblue;
+  svg {
+    overflow: visible;
+  }
+
+  circle:first-of-type {
+    fill: var(--phase-color, skyblue);
+    transition: fill 1s ease-in-out;
+    filter: drop-shadow(0 0 15px var(--phase-color, skyblue));
+  }
+
+  .ripple {
+    fill: none;
+    stroke: var(--phase-color, skyblue);
+    stroke-width: 1.5;
+    opacity: 0;
+    animation: ripple-expand 1.5s ease-out forwards;
+    pointer-events: none;
+  }
+
+  &.milestone circle:first-of-type {
+    animation: milestone-flash 1s ease-out;
+  }
+}
+
+@keyframes ripple-expand {
+  0% {
+    transform-origin: 50px 50px;
+    transform: scale(1);
+    opacity: 0.5;
+    stroke-width: 1.5;
+  }
+  100% {
+    transform-origin: 50px 50px;
+    transform: scale(1.6);
+    opacity: 0;
+    stroke-width: 0.5;
+  }
+}
+
+@keyframes milestone-flash {
+  0% {
+    filter: drop-shadow(0 0 15px var(--phase-color, skyblue));
+  }
+  40% {
+    filter: drop-shadow(0 0 40px var(--phase-color, skyblue))
+            drop-shadow(0 0 80px var(--phase-color, skyblue));
+  }
+  100% {
+    filter: drop-shadow(0 0 15px var(--phase-color, skyblue));
   }
 }
 

@@ -1,14 +1,20 @@
 import { useState, useRef, useEffect } from "react";
 import NoSleep from "nosleep.js";
-import { Button, Drawer, DrawerSize } from "@blueprintjs/core";
-import { Setting, DEFAULT_SETTINGS, loadSettings } from "../types";
+import { Button, Drawer, DrawerSize, Switch } from "@blueprintjs/core";
+import { Setting, PlayfulSettings, DEFAULT_SETTINGS, loadSettings } from "../types";
 import "./SideMenu.scss";
 
 interface SideMenuProps {
   onSettingsChange: (newSettings: Setting[]) => void;
+  playfulSettings: PlayfulSettings;
+  onPlayfulChange: (settings: PlayfulSettings) => void;
 }
 
-export default function SideMenu({ onSettingsChange }: SideMenuProps) {
+export default function SideMenu({
+  onSettingsChange,
+  playfulSettings,
+  onPlayfulChange,
+}: SideMenuProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [noSleepEnabled, setNoSleepEnabled] = useState(false);
   const [formSettings, setFormSettings] = useState<Setting[]>(loadSettings);
@@ -74,6 +80,10 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
       }
       return next;
     });
+  }
+
+  function handlePlayfulToggle(key: keyof PlayfulSettings) {
+    onPlayfulChange({ ...playfulSettings, [key]: !playfulSettings[key] });
   }
 
   const phases = [
@@ -166,6 +176,26 @@ export default function SideMenu({ onSettingsChange }: SideMenuProps) {
                   </tr>
                 </tbody>
               </table>
+            </li>
+            <li className="menu-section">
+              <h3 className="menu-heading">Extras</h3>
+              <div className="extras-toggles">
+                <Switch
+                  checked={playfulSettings.soundEnabled}
+                  label="Sound effects"
+                  onChange={() => handlePlayfulToggle("soundEnabled")}
+                />
+                <Switch
+                  checked={playfulSettings.particlesEnabled}
+                  label="Celebrations"
+                  onChange={() => handlePlayfulToggle("particlesEnabled")}
+                />
+                <Switch
+                  checked={playfulSettings.dynamicColorsEnabled}
+                  label="Color shifts"
+                  onChange={() => handlePlayfulToggle("dynamicColorsEnabled")}
+                />
+              </div>
             </li>
             <li className="menu-section">
               <Button
