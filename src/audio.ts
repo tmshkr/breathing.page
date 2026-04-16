@@ -50,7 +50,9 @@ export function playPhaseSound(phaseIndex: number) {
     case 2: // exhale — falling tone
       playTone(500, 300, 0.3, 0.08);
       break;
-    // case 3: pause — silence
+    case 3: // pause — very soft low tone
+      playTone(250, 250, 0.2, 0.03);
+      break;
   }
 }
 
