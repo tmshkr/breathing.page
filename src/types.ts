@@ -43,4 +43,18 @@ export function savePlayfulSettings(settings: PlayfulSettings) {
   window.localStorage.setItem("playfulSettings", JSON.stringify(settings));
 }
 
+export function loadNoSleepEnabled(): boolean {
+  try {
+    const saved = window.localStorage.getItem("noSleepEnabled");
+    if (saved !== null) return JSON.parse(saved) as boolean;
+  } catch (e) {
+    // ignore
+  }
+  return false;
+}
+
+export function saveNoSleepEnabled(enabled: boolean) {
+  window.localStorage.setItem("noSleepEnabled", JSON.stringify(enabled));
+}
+
 export const PHASE_COLORS = ["#87CEEB", "#A8D8EA", "#7EC8C8", "#B8A9C9"];
