@@ -1,7 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import NoSleep from "nosleep.js";
 import { Button, Drawer, DrawerSize, Switch } from "@blueprintjs/core";
-import { Setting, PlayfulSettings, DEFAULT_SETTINGS, loadSettings } from "../types";
+import {
+  Setting,
+  PlayfulSettings,
+  DEFAULT_SETTINGS,
+  loadSettings,
+  loadNoSleepEnabled,
+  saveNoSleepEnabled,
+} from "../types";
 import "./SideMenu.scss";
 
 interface SideMenuProps {
@@ -16,13 +23,20 @@ export default function SideMenu({
   onPlayfulChange,
 }: SideMenuProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [noSleepEnabled, setNoSleepEnabled] = useState(false);
+  const [noSleepEnabled, setNoSleepEnabled] = useState(loadNoSleepEnabled);
   const [formSettings, setFormSettings] = useState<Setting[]>(loadSettings);
 
   const noSleepRef = useRef<NoSleep | null>(null);
 
   useEffect(() => {
     noSleepRef.current = new NoSleep();
+    if (noSleepEnabled) {
+      Promise.resolve(noSleepRef.current.enable()).catch(() => {
+        setNoSleepEnabled(false);
+        saveNoSleepEnabled(false);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function closeDrawer() {
@@ -59,9 +73,11 @@ export default function SideMenu({
     if (noSleepEnabled) {
       noSleepRef.current?.disable();
       setNoSleepEnabled(false);
+      saveNoSleepEnabled(false);
     } else {
       noSleepRef.current?.enable();
       setNoSleepEnabled(true);
+      saveNoSleepEnabled(true);
     }
     closeDrawer();
   }
