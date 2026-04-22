@@ -86,6 +86,25 @@ export default function App() {
     return () => clearBreathTimeout();
   }, [breathe, clearBreathTimeout]);
 
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        clearBreathTimeout();
+        setPhaseIndex(-1);
+        setText("ready");
+        setCircleScale(0.25);
+        firstCycleRef.current = true;
+      } else {
+        clearBreathTimeout();
+        breatheTimeoutRef.current = setTimeout(() => breathe(settings), 4000);
+      }
+    }
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [settings, breathe, clearBreathTimeout]);
+
   // Set background accent color based on phase
   useEffect(() => {
     if (playful.dynamicColorsEnabled && phaseIndex >= 0) {
