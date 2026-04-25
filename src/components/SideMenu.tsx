@@ -9,6 +9,7 @@ import {
   loadNoSleepEnabled,
   saveNoSleepEnabled,
 } from "../types";
+import { useAuth } from "../auth/AuthContext";
 import "./SideMenu.scss";
 
 interface SideMenuProps {
@@ -25,6 +26,11 @@ export default function SideMenu({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [noSleepEnabled, setNoSleepEnabled] = useState(loadNoSleepEnabled);
   const [formSettings, setFormSettings] = useState<Setting[]>(loadSettings);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authBusy, setAuthBusy] = useState(false);
+
+  const { user, loading: authLoading, configured, signInWithGoogle, signOut } =
+    useAuth();
 
   const noSleepRef = useRef<NoSleep | null>(null);
 
@@ -100,6 +106,32 @@ export default function SideMenu({
 
   function handlePlayfulToggle(key: keyof PlayfulSettings) {
     onPlayfulChange({ ...playfulSettings, [key]: !playfulSettings[key] });
+  }
+
+  async function handleSignIn() {
+    setAuthError(null);
+    setAuthBusy(true);
+    try {
+      await signInWithGoogle();
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Sign-in failed";
+      setAuthError(message);
+    } finally {
+      setAuthBusy(false);
+    }
+  }
+
+  async function handleSignOut() {
+    setAuthError(null);
+    setAuthBusy(true);
+    try {
+      await signOut();
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Sign-out failed";
+      setAuthError(message);
+    } finally {
+      setAuthBusy(false);
+    }
   }
 
   const phases = [
@@ -213,6 +245,56 @@ export default function SideMenu({
                 />
               </div>
             </li>
+            {configured && (
+              <li className="menu-section account-section">
+                <h3 className="menu-heading">Account</h3>
+                {authLoading ? (
+                  <div className="account-status">Loading…</div>
+                ) : user ? (
+                  <div className="account-info">
+                    <div className="account-identity">
+                      {user.photoURL && (
+                        <img
+                          className="account-avatar"
+                          src={user.photoURL}
+                          alt=""
+                          referrerPolicy="no-referrer"
+                        />
+                      )}
+                      <div className="account-meta">
+                        {user.displayName && (
+                          <div className="account-name">{user.displayName}</div>
+                        )}
+                        {user.email && (
+                          <div className="account-email">{user.email}</div>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      icon="log-out"
+                      onClick={handleSignOut}
+                      loading={authBusy}
+                    >
+                      Sign out
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    icon="log-in"
+                    intent="primary"
+                    onClick={handleSignIn}
+                    loading={authBusy}
+                  >
+                    Sign in with Google
+                  </Button>
+                )}
+                {authError && (
+                  <div className="account-error" role="alert">
+                    {authError}
+                  </div>
+                )}
+              </li>
+            )}
             <li className="menu-section">
               <Button
                 id="noSleepToggle"
