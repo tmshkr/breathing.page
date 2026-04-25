@@ -34,6 +34,18 @@
 }
 
 .bp-drawer {
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+
+  .bp5-drawer-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .drawer-menu {
     list-style: none;
     padding: 1rem;
