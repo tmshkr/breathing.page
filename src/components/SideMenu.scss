@@ -129,6 +129,63 @@
     }
   }
 
+  .account-section {
+    .account-info {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .account-identity {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .account-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(32, 57, 94, 0.18);
+    }
+
+    .account-meta {
+      min-width: 0;
+    }
+
+    .account-name {
+      font-weight: 600;
+      color: #1b2c4a;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .account-email {
+      font-size: 0.78rem;
+      color: #5b6b85;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .account-status {
+      color: #5b6b85;
+      font-size: 0.85rem;
+    }
+
+    .account-error {
+      margin-top: 0.5rem;
+      color: #b3261e;
+      font-size: 0.8rem;
+    }
+
+    .bp5-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
   .bp5-button {
     transition: transform 0.15s ease;
 
