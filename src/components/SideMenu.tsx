@@ -5,7 +5,6 @@ import {
   Setting,
   PlayfulSettings,
   DEFAULT_SETTINGS,
-  loadSettings,
   loadNoSleepEnabled,
   saveNoSleepEnabled,
 } from "../types";
@@ -13,19 +12,25 @@ import { useAuth } from "../auth/AuthContext";
 import "./SideMenu.scss";
 
 interface SideMenuProps {
+  settings: Setting[];
   onSettingsChange: (newSettings: Setting[]) => void;
   playfulSettings: PlayfulSettings;
   onPlayfulChange: (settings: PlayfulSettings) => void;
 }
 
 export default function SideMenu({
+  settings,
   onSettingsChange,
   playfulSettings,
   onPlayfulChange,
 }: SideMenuProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [noSleepEnabled, setNoSleepEnabled] = useState(loadNoSleepEnabled);
-  const [formSettings, setFormSettings] = useState<Setting[]>(loadSettings);
+  const [formSettings, setFormSettings] = useState<Setting[]>(settings);
+
+  useEffect(() => {
+    setFormSettings(settings);
+  }, [settings]);
   const [authError, setAuthError] = useState<string | null>(null);
   const [authBusy, setAuthBusy] = useState(false);
 
