@@ -7,6 +7,8 @@ import {
   savePlayfulSettings,
   PHASE_COLORS,
 } from "./types";
+import { loadUserSettings, saveUserSettings } from "./firestore";
+import { useAuth } from "./auth/AuthContext";
 import { playPhaseSound, playMilestoneSound } from "./audio";
 import SideMenu from "./components/SideMenu";
 import Circle from "./components/Circle";
@@ -15,6 +17,7 @@ import CycleCounter from "./components/CycleCounter";
 import Particles from "./components/Particles";
 
 export default function App() {
+  const { user } = useAuth();
   const [settings, setSettings] = useState<Setting[]>(loadSettings);
   const [playful, setPlayful] = useState<PlayfulSettings>(loadPlayfulSettings);
   const [text, setText] = useState("ready");
@@ -26,6 +29,26 @@ export default function App() {
   const breatheTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const playfulRef = useRef(playful);
   playfulRef.current = playful;
+
+  useEffect(() => {
+    if (!user) return;
+    loadUserSettings(user.uid).then((data) => {
+      if (data?.settings) {
+        setSettings(data.settings);
+        window.localStorage.setItem("settings", JSON.stringify(data.settings));
+      }
+      if (data?.playfulSettings) {
+        setPlayful(data.playfulSettings);
+        savePlayfulSettings(data.playfulSettings);
+      }
+      if (!data) {
+        saveUserSettings(user.uid, {
+          settings: loadSettings(),
+          playfulSettings: loadPlayfulSettings(),
+        });
+      }
+    });
+  }, [user?.uid]);
 
   const clearBreathTimeout = useCallback(() => {
     if (breatheTimeoutRef.current !== null) {
@@ -127,6 +150,7 @@ export default function App() {
 
   function handleSettingsChange(newSettings: Setting[]) {
     setSettings(newSettings);
+    if (user) saveUserSettings(user.uid, { settings: newSettings });
     clearBreathTimeout();
     setCycleCount(0);
     setPhaseIndex(-1);
@@ -137,11 +161,13 @@ export default function App() {
   function handlePlayfulChange(newPlayful: PlayfulSettings) {
     setPlayful(newPlayful);
     savePlayfulSettings(newPlayful);
+    if (user) saveUserSettings(user.uid, { playfulSettings: newPlayful });
   }
 
   return (
     <>
       <SideMenu
+        settings={settings}
         onSettingsChange={handleSettingsChange}
         playfulSettings={playful}
         onPlayfulChange={handlePlayfulChange}
