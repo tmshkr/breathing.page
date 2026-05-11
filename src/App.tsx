@@ -15,6 +15,14 @@ import BreathingText from "./components/BreathingText";
 import CycleCounter from "./components/CycleCounter";
 import Particles from "./components/Particles";
 
+function phasesEqual(a: Setting[], b: Setting[]): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i][0] !== b[i][0] || Number(a[i][1]) !== Number(b[i][1])) return false;
+  }
+  return true;
+}
+
 export default function App() {
   const { user } = useAuth();
   const [settings, setSettings] = useState<AppSettings>(loadAppSettings);
@@ -144,14 +152,18 @@ export default function App() {
 
   const handleSettingsChange = useCallback(
     (next: AppSettings) => {
+      const prev = settingsRef.current;
+      const phasesChanged = !phasesEqual(prev.phases, next.phases);
       setSettings(next);
       saveAppSettings(next);
       if (user) saveUserSettings(user.uid, next);
-      clearBreathTimeout();
-      setCycleCount(0);
-      setPhaseIndex(-1);
-      firstCycleRef.current = true;
-      breathe(next.phases);
+      if (phasesChanged) {
+        clearBreathTimeout();
+        setCycleCount(0);
+        setPhaseIndex(-1);
+        firstCycleRef.current = true;
+        breathe(next.phases);
+      }
     },
     [user, breathe, clearBreathTimeout],
   );
