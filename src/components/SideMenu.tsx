@@ -1,36 +1,30 @@
 import { useState, useRef, useEffect } from "react";
 import NoSleep from "nosleep.js";
 import { Button, Drawer, DrawerSize, Switch } from "@blueprintjs/core";
-import {
-  Setting,
-  PlayfulSettings,
-  DEFAULT_SETTINGS,
-  loadNoSleepEnabled,
-  saveNoSleepEnabled,
-} from "../types";
+import { AppSettings, Setting, DEFAULT_APP_SETTINGS } from "../types";
 import { useAuth } from "../auth/AuthContext";
 import "./SideMenu.scss";
 
 interface SideMenuProps {
-  settings: Setting[];
-  onSettingsChange: (newSettings: Setting[]) => void;
-  playfulSettings: PlayfulSettings;
-  onPlayfulChange: (settings: PlayfulSettings) => void;
+  settings: AppSettings;
+  onSettingsChange: (settings: AppSettings) => void;
 }
+
+type PlayfulKey = keyof Pick<
+  AppSettings,
+  "soundEnabled" | "particlesEnabled" | "dynamicColorsEnabled"
+>;
 
 export default function SideMenu({
   settings,
   onSettingsChange,
-  playfulSettings,
-  onPlayfulChange,
 }: SideMenuProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [noSleepEnabled, setNoSleepEnabled] = useState(loadNoSleepEnabled);
-  const [formSettings, setFormSettings] = useState<Setting[]>(settings);
+  const [formPhases, setFormPhases] = useState<Setting[]>(settings.phases);
 
   useEffect(() => {
-    setFormSettings(settings);
-  }, [settings]);
+    setFormPhases(settings.phases);
+  }, [settings.phases]);
   const [authError, setAuthError] = useState<string | null>(null);
   const [authBusy, setAuthBusy] = useState(false);
 
@@ -38,25 +32,33 @@ export default function SideMenu({
     useAuth();
 
   const noSleepRef = useRef<NoSleep | null>(null);
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
 
   useEffect(() => {
     noSleepRef.current = new NoSleep();
-    if (noSleepEnabled) {
-      Promise.resolve(noSleepRef.current.enable()).catch(() => {
-        setNoSleepEnabled(false);
-        saveNoSleepEnabled(false);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const ns = noSleepRef.current;
+    if (!ns) return;
+    if (settings.noSleepEnabled) {
+      Promise.resolve(ns.enable()).catch(() => {
+        const s = settingsRef.current;
+        onSettingsChange({ ...s, noSleepEnabled: false });
+      });
+    } else {
+      ns.disable();
+    }
+  }, [settings.noSleepEnabled, onSettingsChange]);
 
   function closeDrawer() {
     window.scrollTo(0, 0);
     setDrawerOpen(false);
   }
 
-  function saveSettings() {
-    const newSettings: Setting[] = formSettings.map(([word, time], i) => {
+  function savePhaseSettings() {
+    const newPhases: Setting[] = formPhases.map(([word, time], i) => {
       let t = Number(time);
       let w = word;
       if (t <= 0 && i % 2 === 1) {
@@ -67,29 +69,22 @@ export default function SideMenu({
       if (t > 10) t = 10;
       return [w, t];
     });
-    setFormSettings(newSettings);
-    window.localStorage.setItem("settings", JSON.stringify(newSettings));
-    onSettingsChange(newSettings);
+    setFormPhases(newPhases);
+    onSettingsChange({ ...settings, phases: newPhases });
     closeDrawer();
   }
 
-  function resetSettings() {
-    setFormSettings(DEFAULT_SETTINGS);
-    window.localStorage.setItem("settings", JSON.stringify(DEFAULT_SETTINGS));
-    onSettingsChange(DEFAULT_SETTINGS);
+  function resetPhaseSettings() {
+    setFormPhases(DEFAULT_APP_SETTINGS.phases);
+    onSettingsChange({
+      ...settings,
+      phases: DEFAULT_APP_SETTINGS.phases,
+    });
     closeDrawer();
   }
 
   function toggleNoSleep() {
-    if (noSleepEnabled) {
-      noSleepRef.current?.disable();
-      setNoSleepEnabled(false);
-      saveNoSleepEnabled(false);
-    } else {
-      noSleepRef.current?.enable();
-      setNoSleepEnabled(true);
-      saveNoSleepEnabled(true);
-    }
+    onSettingsChange({ ...settings, noSleepEnabled: !settings.noSleepEnabled });
     closeDrawer();
   }
 
@@ -98,7 +93,7 @@ export default function SideMenu({
     field: "word" | "time",
     value: string,
   ) {
-    setFormSettings((prev) => {
+    setFormPhases((prev) => {
       const next: Setting[] = prev.map(([w, t]) => [w, t]);
       if (field === "word") {
         next[index][0] = value;
@@ -109,8 +104,8 @@ export default function SideMenu({
     });
   }
 
-  function handlePlayfulToggle(key: keyof PlayfulSettings) {
-    onPlayfulChange({ ...playfulSettings, [key]: !playfulSettings[key] });
+  function handlePlayfulToggle(key: PlayfulKey) {
+    onSettingsChange({ ...settings, [key]: !settings[key] });
   }
 
   async function handleSignIn() {
@@ -183,7 +178,7 @@ export default function SideMenu({
                           id={`phase-word-${phase.label}`}
                           type="text"
                           name="word"
-                          value={formSettings[i][0]}
+                          value={formPhases[i][0]}
                           placeholder={phase.label}
                           onChange={(e) =>
                             handleFormChange(i, "word", e.target.value)
@@ -203,7 +198,7 @@ export default function SideMenu({
                           name="time"
                           min={phase.minTime}
                           max="10"
-                          value={formSettings[i][1]}
+                          value={formPhases[i][1]}
                           onChange={(e) =>
                             handleFormChange(i, "time", e.target.value)
                           }
@@ -213,7 +208,7 @@ export default function SideMenu({
                   ))}
                   <tr>
                     <td>
-                      <Button name="reset" onClick={resetSettings}>
+                      <Button name="reset" onClick={resetPhaseSettings}>
                         reset
                       </Button>
                     </td>
@@ -221,7 +216,7 @@ export default function SideMenu({
                       <Button
                         name="save"
                         intent="primary"
-                        onClick={saveSettings}
+                        onClick={savePhaseSettings}
                       >
                         save
                       </Button>
@@ -234,19 +229,21 @@ export default function SideMenu({
               <h3 className="menu-heading">Extras</h3>
               <div className="extras-toggles">
                 <Switch
-                  checked={playfulSettings.soundEnabled}
+                  checked={settings.soundEnabled}
                   label="Sound effects"
                   onChange={() => handlePlayfulToggle("soundEnabled")}
                 />
                 <Switch
-                  checked={playfulSettings.particlesEnabled}
+                  checked={settings.particlesEnabled}
                   label="Celebrations"
                   onChange={() => handlePlayfulToggle("particlesEnabled")}
                 />
                 <Switch
-                  checked={playfulSettings.dynamicColorsEnabled}
+                  checked={settings.dynamicColorsEnabled}
                   label="Color shifts"
-                  onChange={() => handlePlayfulToggle("dynamicColorsEnabled")}
+                  onChange={() =>
+                    handlePlayfulToggle("dynamicColorsEnabled")
+                  }
                 />
               </div>
             </li>
@@ -304,7 +301,7 @@ export default function SideMenu({
               <Button
                 id="noSleepToggle"
                 minimal
-                icon={noSleepEnabled ? "tick" : undefined}
+                icon={settings.noSleepEnabled ? "tick" : undefined}
                 onClick={toggleNoSleep}
               >
                 Prevent Display Sleep

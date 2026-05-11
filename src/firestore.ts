@@ -1,46 +1,91 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Setting, PlayfulSettings } from "./types";
+import type { AppSettings, Setting } from "./types";
+import { DEFAULT_APP_SETTINGS, normalizeAppSettings } from "./types";
 
 interface PhaseDoc {
   word: string;
   duration: number;
 }
 
-interface UserDoc {
+/** Serialized shape stored under `appSettings` on the user document */
+interface AppSettingsDoc {
+  phases: PhaseDoc[];
+  soundEnabled: boolean;
+  particlesEnabled: boolean;
+  dynamicColorsEnabled: boolean;
+  noSleepEnabled: boolean;
+}
+
+/** Legacy Firestore user document fields */
+interface LegacyUserDoc {
+  appSettings?: AppSettingsDoc;
   settings?: PhaseDoc[];
-  playfulSettings?: PlayfulSettings;
+  playfulSettings?: Partial<
+    Pick<
+      AppSettings,
+      "soundEnabled" | "particlesEnabled" | "dynamicColorsEnabled"
+    >
+  >;
 }
 
-export interface UserSettings {
-  settings?: Setting[];
-  playfulSettings?: PlayfulSettings;
-}
-
-function serializeSettings(settings: Setting[]): PhaseDoc[] {
+function serializePhases(settings: Setting[]): PhaseDoc[] {
   return settings.map(([word, duration]) => ({ word, duration }));
 }
 
-function deserializeSettings(phases: PhaseDoc[]): Setting[] {
+function deserializePhases(phases: PhaseDoc[]): Setting[] {
   return phases.map(({ word, duration }) => [word, duration]);
 }
 
-export async function loadUserSettings(uid: string): Promise<UserSettings | null> {
-  if (!db) return null;
-  const snap = await getDoc(doc(db, "users", uid));
-  if (!snap.exists()) return null;
-  const data = snap.data() as UserDoc;
+function serializeAppSettings(s: AppSettings): AppSettingsDoc {
   return {
-    settings: data.settings ? deserializeSettings(data.settings) : undefined,
-    playfulSettings: data.playfulSettings,
+    phases: serializePhases(s.phases),
+    soundEnabled: s.soundEnabled,
+    particlesEnabled: s.particlesEnabled,
+    dynamicColorsEnabled: s.dynamicColorsEnabled,
+    noSleepEnabled: s.noSleepEnabled,
   };
 }
 
-export async function saveUserSettings(uid: string, data: Partial<UserSettings>): Promise<void> {
+function deserializeAppSettings(doc_: AppSettingsDoc): AppSettings {
+  return normalizeAppSettings({
+    phases: deserializePhases(doc_.phases),
+    soundEnabled: doc_.soundEnabled,
+    particlesEnabled: doc_.particlesEnabled,
+    dynamicColorsEnabled: doc_.dynamicColorsEnabled,
+    noSleepEnabled: doc_.noSleepEnabled,
+  });
+}
+
+export async function loadUserSettings(
+  uid: string,
+): Promise<AppSettings | null> {
+  if (!db) return null;
+  const snap = await getDoc(doc(db, "users", uid));
+  if (!snap.exists()) return null;
+  const data = snap.data() as LegacyUserDoc;
+  if (data.appSettings) {
+    return deserializeAppSettings(data.appSettings);
+  }
+  const phases = data.settings
+    ? deserializePhases(data.settings)
+    : DEFAULT_APP_SETTINGS.phases;
+  const playful = data.playfulSettings ?? {};
+  return normalizeAppSettings({
+    phases,
+    ...playful,
+    noSleepEnabled: DEFAULT_APP_SETTINGS.noSleepEnabled,
+  });
+}
+
+export async function saveUserSettings(
+  uid: string,
+  settings: AppSettings,
+): Promise<void> {
   if (!db) return;
-  const doc_ = doc(db, "users", uid);
-  const payload: Partial<UserDoc> = {};
-  if (data.settings) payload.settings = serializeSettings(data.settings);
-  if (data.playfulSettings) payload.playfulSettings = data.playfulSettings;
-  await setDoc(doc_, payload, { merge: true });
+  await setDoc(
+    doc(db, "users", uid),
+    { appSettings: serializeAppSettings(settings) },
+    { merge: true },
+  );
 }

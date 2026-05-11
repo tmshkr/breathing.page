@@ -1,60 +1,103 @@
 export type Setting = [string, number];
 
-export const DEFAULT_SETTINGS: Setting[] = [
-  ["inhale", 4],
-  ["hold", 4],
-  ["exhale", 4],
-  ["pause", 4],
-];
-
-export function loadSettings(): Setting[] {
-  try {
-    const saved = window.localStorage.getItem("settings");
-    if (saved !== null) return JSON.parse(saved) as Setting[];
-  } catch (e) {
-    // ignore
-  }
-  return DEFAULT_SETTINGS;
-}
-
-export interface PlayfulSettings {
+export interface AppSettings {
+  phases: Setting[];
   soundEnabled: boolean;
   particlesEnabled: boolean;
   dynamicColorsEnabled: boolean;
+  noSleepEnabled: boolean;
 }
 
-export const DEFAULT_PLAYFUL: PlayfulSettings = {
+export const DEFAULT_APP_SETTINGS: AppSettings = {
+  phases: [
+    ["inhale", 4],
+    ["hold", 4],
+    ["exhale", 4],
+    ["pause", 4],
+  ],
   soundEnabled: false,
   particlesEnabled: true,
   dynamicColorsEnabled: true,
+  noSleepEnabled: false,
 };
 
-export function loadPlayfulSettings(): PlayfulSettings {
+const STORAGE_KEY = "appSettings";
+
+export function normalizeAppSettings(partial: Partial<AppSettings>): AppSettings {
+  const phases =
+    partial.phases &&
+    Array.isArray(partial.phases) &&
+    partial.phases.length === DEFAULT_APP_SETTINGS.phases.length
+      ? partial.phases
+      : DEFAULT_APP_SETTINGS.phases;
+  return {
+    ...DEFAULT_APP_SETTINGS,
+    ...partial,
+    phases,
+  };
+}
+
+function migrateLegacyLocalStorage(): AppSettings {
+  let phases = DEFAULT_APP_SETTINGS.phases;
   try {
-    const saved = window.localStorage.getItem("playfulSettings");
-    if (saved !== null) return { ...DEFAULT_PLAYFUL, ...JSON.parse(saved) };
-  } catch (e) {
+    const old = window.localStorage.getItem("settings");
+    if (old !== null) {
+      const parsed = JSON.parse(old) as Setting[];
+      if (Array.isArray(parsed) && parsed.length === phases.length) {
+        phases = parsed;
+      }
+    }
+  } catch {
     // ignore
   }
-  return DEFAULT_PLAYFUL;
-}
-
-export function savePlayfulSettings(settings: PlayfulSettings) {
-  window.localStorage.setItem("playfulSettings", JSON.stringify(settings));
-}
-
-export function loadNoSleepEnabled(): boolean {
+  let soundEnabled = DEFAULT_APP_SETTINGS.soundEnabled;
+  let particlesEnabled = DEFAULT_APP_SETTINGS.particlesEnabled;
+  let dynamicColorsEnabled = DEFAULT_APP_SETTINGS.dynamicColorsEnabled;
   try {
-    const saved = window.localStorage.getItem("noSleepEnabled");
-    if (saved !== null) return JSON.parse(saved) as boolean;
-  } catch (e) {
+    const oldPlayful = window.localStorage.getItem("playfulSettings");
+    if (oldPlayful !== null) {
+      const p = JSON.parse(oldPlayful) as Partial<AppSettings>;
+      if (typeof p.soundEnabled === "boolean") soundEnabled = p.soundEnabled;
+      if (typeof p.particlesEnabled === "boolean") particlesEnabled = p.particlesEnabled;
+      if (typeof p.dynamicColorsEnabled === "boolean") {
+        dynamicColorsEnabled = p.dynamicColorsEnabled;
+      }
+    }
+  } catch {
     // ignore
   }
-  return false;
+  let noSleepEnabled = DEFAULT_APP_SETTINGS.noSleepEnabled;
+  try {
+    const oldNs = window.localStorage.getItem("noSleepEnabled");
+    if (oldNs !== null) noSleepEnabled = JSON.parse(oldNs) as boolean;
+  } catch {
+    // ignore
+  }
+  const merged = normalizeAppSettings({
+    phases,
+    soundEnabled,
+    particlesEnabled,
+    dynamicColorsEnabled,
+    noSleepEnabled,
+  });
+  saveAppSettings(merged);
+  return merged;
 }
 
-export function saveNoSleepEnabled(enabled: boolean) {
-  window.localStorage.setItem("noSleepEnabled", JSON.stringify(enabled));
+export function loadAppSettings(): AppSettings {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (saved !== null) {
+      return normalizeAppSettings(JSON.parse(saved) as Partial<AppSettings>);
+    }
+  } catch {
+    // ignore
+  }
+  return migrateLegacyLocalStorage();
+}
+
+export function saveAppSettings(settings: AppSettings) {
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
 }
 
 export const PHASE_COLORS = ["#87CEEB", "#A8D8EA", "#7EC8C8", "#B8A9C9"];
