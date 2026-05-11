@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
-  Setting,
-  PlayfulSettings,
-  loadSettings,
-  loadPlayfulSettings,
-  savePlayfulSettings,
+  type Setting,
+  AppSettings,
+  loadAppSettings,
+  saveAppSettings,
   PHASE_COLORS,
 } from "./types";
 import { loadUserSettings, saveUserSettings } from "./firestore";
@@ -16,10 +15,17 @@ import BreathingText from "./components/BreathingText";
 import CycleCounter from "./components/CycleCounter";
 import Particles from "./components/Particles";
 
+function phasesEqual(a: Setting[], b: Setting[]): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i][0] !== b[i][0] || Number(a[i][1]) !== Number(b[i][1])) return false;
+  }
+  return true;
+}
+
 export default function App() {
   const { user } = useAuth();
-  const [settings, setSettings] = useState<Setting[]>(loadSettings);
-  const [playful, setPlayful] = useState<PlayfulSettings>(loadPlayfulSettings);
+  const [settings, setSettings] = useState<AppSettings>(loadAppSettings);
   const [text, setText] = useState("ready");
   const [circleScale, setCircleScale] = useState(0.25);
   const [circleTransition, setCircleTransition] = useState("all 4.0s ease-in-out");
@@ -27,25 +33,18 @@ export default function App() {
   const [cycleCount, setCycleCount] = useState(0);
 
   const breatheTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const playfulRef = useRef(playful);
-  playfulRef.current = playful;
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
 
   useEffect(() => {
     if (!user) return;
     loadUserSettings(user.uid).then((data) => {
-      if (data?.settings) {
-        setSettings(data.settings);
-        window.localStorage.setItem("settings", JSON.stringify(data.settings));
-      }
-      if (data?.playfulSettings) {
-        setPlayful(data.playfulSettings);
-        savePlayfulSettings(data.playfulSettings);
-      }
-      if (!data) {
-        saveUserSettings(user.uid, {
-          settings: loadSettings(),
-          playfulSettings: loadPlayfulSettings(),
-        });
+      if (data) {
+        setSettings(data);
+        saveAppSettings(data);
+      } else {
+        const initial = loadAppSettings();
+        saveUserSettings(user.uid, initial);
       }
     });
   }, [user?.uid]);
@@ -59,8 +58,8 @@ export default function App() {
 
   const firstCycleRef = useRef(true);
 
-  const breathe = useCallback((currentSettings: Setting[], phase = 0) => {
-    const [word, timeStr] = currentSettings[phase];
+  const breathe = useCallback((phases: Setting[], phase = 0) => {
+    const [word, timeStr] = phases[phase];
     const duration = Number(timeStr);
 
     setPhaseIndex(phase);
@@ -72,7 +71,7 @@ export default function App() {
       } else {
         setCycleCount((prev) => {
           const next = prev + 1;
-          if (next > 0 && next % 5 === 0 && playfulRef.current.soundEnabled) {
+          if (next > 0 && next % 5 === 0 && settingsRef.current.soundEnabled) {
             playMilestoneSound();
           }
           return next;
@@ -81,7 +80,7 @@ export default function App() {
     }
 
     // Play phase sound if enabled
-    if (playfulRef.current.soundEnabled && duration > 0) {
+    if (settingsRef.current.soundEnabled && duration > 0) {
       playPhaseSound(phase);
     }
 
@@ -100,12 +99,12 @@ export default function App() {
     }
 
     breatheTimeoutRef.current = setTimeout(() => {
-      breathe(currentSettings, (phase + 1) % currentSettings.length);
+      breathe(phases, (phase + 1) % phases.length);
     }, duration * 1000);
   }, []);
 
   useEffect(() => {
-    breatheTimeoutRef.current = setTimeout(() => breathe(settings), 4000);
+    breatheTimeoutRef.current = setTimeout(() => breathe(settings.phases), 4000);
     return () => clearBreathTimeout();
   }, [breathe, clearBreathTimeout]);
 
@@ -119,18 +118,21 @@ export default function App() {
         firstCycleRef.current = true;
       } else {
         clearBreathTimeout();
-        breatheTimeoutRef.current = setTimeout(() => breathe(settings), 4000);
+        breatheTimeoutRef.current = setTimeout(
+          () => breathe(settings.phases),
+          4000,
+        );
       }
     }
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [settings, breathe, clearBreathTimeout]);
+  }, [settings.phases, breathe, clearBreathTimeout]);
 
   // Set background accent color based on phase
   useEffect(() => {
-    if (playful.dynamicColorsEnabled && phaseIndex >= 0) {
+    if (settings.dynamicColorsEnabled && phaseIndex >= 0) {
       const color = PHASE_COLORS[phaseIndex % PHASE_COLORS.length];
       // Convert hex to rgba with low opacity for ambient bg
       const r = parseInt(color.slice(1, 3), 16);
@@ -146,32 +148,29 @@ export default function App() {
         "rgba(135, 206, 235, 0.06)",
       );
     }
-  }, [phaseIndex, playful.dynamicColorsEnabled]);
+  }, [phaseIndex, settings.dynamicColorsEnabled]);
 
-  function handleSettingsChange(newSettings: Setting[]) {
-    setSettings(newSettings);
-    if (user) saveUserSettings(user.uid, { settings: newSettings });
-    clearBreathTimeout();
-    setCycleCount(0);
-    setPhaseIndex(-1);
-    firstCycleRef.current = true;
-    breathe(newSettings);
-  }
-
-  function handlePlayfulChange(newPlayful: PlayfulSettings) {
-    setPlayful(newPlayful);
-    savePlayfulSettings(newPlayful);
-    if (user) saveUserSettings(user.uid, { playfulSettings: newPlayful });
-  }
+  const handleSettingsChange = useCallback(
+    (next: AppSettings) => {
+      const prev = settingsRef.current;
+      const phasesChanged = !phasesEqual(prev.phases, next.phases);
+      setSettings(next);
+      saveAppSettings(next);
+      if (user) saveUserSettings(user.uid, next);
+      if (phasesChanged) {
+        clearBreathTimeout();
+        setCycleCount(0);
+        setPhaseIndex(-1);
+        firstCycleRef.current = true;
+        breathe(next.phases);
+      }
+    },
+    [user, breathe, clearBreathTimeout],
+  );
 
   return (
     <>
-      <SideMenu
-        settings={settings}
-        onSettingsChange={handleSettingsChange}
-        playfulSettings={playful}
-        onPlayfulChange={handlePlayfulChange}
-      />
+      <SideMenu settings={settings} onSettingsChange={handleSettingsChange} />
       <div
         id="main-view"
         onTouchMove={(e) => e.preventDefault()}
@@ -181,11 +180,11 @@ export default function App() {
           transition={circleTransition}
           phaseIndex={phaseIndex}
           cycleCount={cycleCount}
-          dynamicColorsEnabled={playful.dynamicColorsEnabled}
+          dynamicColorsEnabled={settings.dynamicColorsEnabled}
         />
         <BreathingText text={text} />
         <CycleCounter cycleCount={cycleCount} phaseIndex={phaseIndex} />
-        <Particles trigger={cycleCount} enabled={playful.particlesEnabled} />
+        <Particles trigger={cycleCount} enabled={settings.particlesEnabled} />
       </div>
     </>
   );
